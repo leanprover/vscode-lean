@@ -136,7 +136,7 @@ export function activate(context: vscode.ExtensionContext) {
     loadJsonFile(context.asAbsolutePath("language-configuration.json")).then(json => {
         json.wordPattern = /(-?\d*\.\d\w*)|([^\`\~\!\@\#\$\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\"\,\.\/\?\s]+)/g;
         context.subscriptions.push(
-            vscode.languages.setLanguageConfiguration(LEAN_MODE, json)
+            vscode.languages.setLanguageConfiguration(LEAN_MODE.language, json)
         );
     })
     
