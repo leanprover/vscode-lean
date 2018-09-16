@@ -4,55 +4,8 @@
   "fileTypes": ["lean"],
   "patterns": [
     {"include": "#comments"},
-    {
-      "begin": "\\b(?<!\\.)(inductive|coinductive|structure|theorem|axiom|axioms|abbreviation|lemma|definition|def|instance|class|constant)\\b\\s+(\\{[^}]*\\})?",
-      "beginCaptures": {
-        "1": {"name": "keyword.other.definitioncommand.lean"}
-      },
-      "patterns": [
-        {"include": "#comments"},
-        {"include": "#definitionName"},
-        {"match": ","}
-      ],
-      "end": "(?=\\bwith\\b|\\bextends\\b|[:\\|\\(\\[\\{⦃<>])",
-      "name": "meta.definitioncommand.lean"
-    },
-    { "match": "\\b(Prop|Type|Sort)\\b", "name": "storage.type.lean" },
-    { "match": "\\battribute\\b\\s*\\[[^\\]]*\\]", "name": "storage.modifier.lean" },
-    { "match": "@\\[[^\\]]*\\]", "name": "storage.modifier.lean" },
-    {
-      "match": "\\b(?<!\\.)(private|meta|mutual|protected|noncomputable)\\b",
-      "name": "keyword.control.definition.modifier.lean"
-    },
-    { "match": "\\b(sorry)\\b", "name": "invalid.illegal.lean" },
-    { "match": "#print\\s+(def|definition|inductive|instance|structure|axiom|axioms|class)\\b", "name": "keyword.other.command.lean" },
-    { "match": "#(print|eval|reduce|check|help|exit)\\b", "name": "keyword.other.command.lean" },
-    {
-      "match": "\\b(?<!\\.)(import|prelude|theory|definition|def|abbreviation|instance|renaming|hiding|exposing|parameter|parameters|begin|constant|constants|lemma|variable|variables|theorem|example|open|axiom|inductive|coinductive|with|structure|universe|universes|alias|precedence|reserve|postfix|prefix|infix|infixl|infixr|notation|end|using|namespace|section|local|set_option|extends|include|omit|class|classes|instances|raw|run_cmd)(?!\\.)\\b",
-      "name": "keyword.other.lean"
-    },
-    {
-      "match": "\\b(?<!\\.)(calc|have|this|match|do|suffices|show|by|in|at|let|forall|fun|exists|assume|from|λ)(?!\\.)\\b",
-      "name": "keyword.other.lean"
-    },
-    {"begin": "«", "end": "»", "contentName": "entity.name.lean"},
-    { "match": "\\b(?<!\\.)(if|then|else)\\b", "name": "keyword.control.lean" },
-    {
-      "begin": "\"", "end": "\"",
-      "beginCaptures": {"0": {"name": "punctuation.definition.string.begin.lean"}},
-      "endCaptures": {"0": {"name": "punctuation.definition.string.end.lean"}},
-      "name": "string.quoted.double.lean",
-      "patterns": [
-        {"match": "\\\\[\\\\\"nt']", "name": "constant.character.escape.lean"},
-        {"match": "\\\\x[0-9A-Fa-f][0-9A-Fa-f]", "name": "constant.character.escape.lean"},
-        {"match": "\\\\u[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]", "name": "constant.character.escape.lean"}
-      ]
-    },
-    { "name": "string.quoted.single.lean", "match": "'[^\\\\']'" },
-    { "name": "string.quoted.single.lean", "match": "'(\\\\(x..|u....|.))'",
-      "captures": {"1": {"name": "constant.character.escape.lean"}} },
-    {"match": "`+[^\\[(]\\S+", "name": "entity.name.lean"},
-    { "match": "\\b([0-9]+|0([xX][0-9a-fA-F]+))\\b", "name": "constant.numeric.lean" }
+    {"include": "#main"},
+    {"include": "#brackets"}
   ],
   "repository": {
     "dashComment": {
@@ -82,6 +35,155 @@
       "patterns": [
         {"match": "\\b[^«»\\(\\)\\{\\}[:space:]=→λ∀?][^«»\\(\\)\\{\\}[:space:]]*", "name": "entity.name.function.lean"},
         {"begin": "«", "end": "»", "contentName": "entity.name.function.lean"}
+      ]
+    },
+    "main": {
+      "patterns": [
+        {
+          "begin": "\\b(?<!\\.)(inductive|coinductive|structure|theorem|axiom|axioms|abbreviation|lemma|definition|def|instance|class|constant)\\b\\s+(\\{[^}]*\\})?",
+          "beginCaptures": {
+            "1": {"name": "keyword.other.definitioncommand.lean"}
+          },
+          "patterns": [
+            {"include": "#comments"},
+            {"include": "#definitionName"},
+            {"match": ","}
+          ],
+          "end": "(?=\\bwith\\b|\\bextends\\b|[:\\|\\(\\[\\{⦃<>])",
+          "name": "meta.definitioncommand.lean"
+        },
+        { "match": "\\b(Prop|Type|Sort)\\b", "name": "storage.type.lean" },
+        { "match": "\\battribute\\b\\s*\\[[^\\]]*\\]", "name": "storage.modifier.lean" },
+        { "match": "@\\[[^\\]]*\\]", "name": "storage.modifier.lean" },
+        {
+          "match": "\\b(?<!\\.)(private|meta|mutual|protected|noncomputable)\\b",
+          "name": "keyword.control.definition.modifier.lean"
+        },
+        { "match": "\\b(sorry)\\b", "name": "invalid.illegal.lean" },
+        { "match": "#print\\s+(def|definition|inductive|instance|structure|axiom|axioms|class)\\b", "name": "keyword.other.command.lean" },
+        { "match": "#(print|eval|reduce|check|help|exit)\\b", "name": "keyword.other.command.lean" },
+        {
+          "match": "\\b(?<!\\.)(import|prelude|theory|definition|def|abbreviation|instance|renaming|hiding|exposing|parameter|parameters|begin|constant|constants|lemma|variable|variables|theorem|example|open|axiom|inductive|coinductive|with|structure|universe|universes|alias|precedence|reserve|postfix|prefix|infix|infixl|infixr|notation|end|using|namespace|section|local|set_option|extends|include|omit|class|classes|instances|raw|run_cmd|calc|have|this|match|do|suffices|show|by|in|at|let|forall|fun|exists|assume|from|λ)(?!\\.)\\b",
+          "name": "keyword.other.lean"
+        },
+        {"begin": "«", "end": "»", "contentName": "entity.name.lean"},
+        { "match": "\\b(?<!\\.)(if|then|else)\\b", "name": "keyword.control.lean" },
+        {
+          "begin": "\"", "end": "\"",
+          "beginCaptures": {"0": {"name": "punctuation.definition.string.begin.lean"}},
+          "endCaptures": {"0": {"name": "punctuation.definition.string.end.lean"}},
+          "name": "string.quoted.double.lean",
+          "patterns": [
+            {"match": "\\\\[\\\\\"nt']", "name": "constant.character.escape.lean"},
+            {"match": "\\\\x[0-9A-Fa-f][0-9A-Fa-f]", "name": "constant.character.escape.lean"},
+            {"match": "\\\\u[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]", "name": "constant.character.escape.lean"}
+          ]
+        },
+        { "name": "string.quoted.single.lean", "match": "'[^\\\\']'" },
+        { "name": "string.quoted.single.lean", "match": "'(\\\\(x..|u....|.))'",
+          "captures": {"1": {"name": "constant.character.escape.lean"}} },
+        {"match": "`+[^\\[(]\\S+", "name": "entity.name.lean"},
+        { "match": "\\b([0-9]+|0([xX][0-9a-fA-F]+))\\b", "name": "constant.numeric.lean" }
+      ]
+    },
+    "roundBrackets": {
+      "begin": "\\(", "beginCaptures": {
+        "0": {
+          "name": "meta.brace.round.begin.lean"
+        }
+      }, "end": "\\)", "endCaptures": {
+        "0": {
+          "name": "meta.brace.round.end.lean"
+        }
+      }, "patterns": [
+        {"include": "#comments"},
+        {"include": "#main"},
+        {"include": "#brackets"}
+      ]
+    },
+    "squareBrackets": {
+      "begin": "\\[", "beginCaptures": {
+        "0": {
+          "name": "meta.brace.square.begin.lean"
+        }
+      }, "end": "\\]", "endCaptures": {
+        "0": {
+          "name": "meta.brace.square.end.lean"
+        }
+      }, "patterns": [
+        {"include": "#comments"},
+        {"include": "#main"},
+        {"include": "#brackets"}
+      ]
+    },
+    "curlyBrackets": {
+      "begin": "\\{", "beginCaptures": {
+        "0": {
+          "name": "meta.brace.curly.begin.lean"
+        }
+      }, "end": "\\}", "endCaptures": {
+        "0": {
+          "name": "meta.brace.curly.end.lean"
+        }
+      }, "patterns": [
+        {"include": "#comments"},
+        {"include": "#main"},
+        {"include": "#brackets"}
+      ]
+    },
+    "whiteCurlyBrackets": {
+      "begin": "⦃", "beginCaptures": {
+        "0": {
+          "name": "meta.brace.whitecurly.begin.lean"
+        }
+      }, "end": "⦄", "endCaptures": {
+        "0": {
+          "name": "meta.brace.whitecurly.end.lean"
+        }
+      }, "patterns": [
+        {"include": "#comments"},
+        {"include": "#main"},
+        {"include": "#brackets"}
+      ]
+    },
+    "angleBrackets": {
+      "begin": "⟨", "beginCaptures": {
+        "0": {
+          "name": "meta.brace.angle.begin.lean"
+        }
+      }, "end": "⟩", "endCaptures": {
+        "0": {
+          "name": "meta.brace.angle.end.lean"
+        }
+      }, "patterns": [
+        {"include": "#comments"},
+        {"include": "#main"},
+        {"include": "#brackets"}
+      ]
+    },
+    "frenchBrackets": {
+      "begin": "‹", "beginCaptures": {
+        "0": {
+          "name": "meta.brace.french.begin.lean"
+        }
+      }, "end": "›", "endCaptures": {
+        "0": {
+          "name": "meta.brace.french.end.lean"
+        }
+      }, "patterns": [
+        {"include": "#comments"},
+        {"include": "#main"},
+        {"include": "#brackets"}
+      ]
+    },
+    "brackets": {
+      "patterns": [
+        {"include": "#roundBrackets"},
+        {"include": "#squareBrackets"},
+        {"include": "#curlyBrackets"},
+        {"include": "#whiteCurlyBrackets"},
+        {"include": "#angleBrackets"},
+        {"include": "#frenchBrackets"}
       ]
     }
   }
