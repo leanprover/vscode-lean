@@ -20,49 +20,67 @@ function post(message: FromInfoviewMessage): void { // send a message to the ext
     vscode.postMessage(message);
 }
 
+/** Call this to instruct the editor to remove all highlighting. */
 export function clearHighlight(): void { return post({ command: 'stop_hover'}); }
+/** Call this to instruct the editor to highlight a specific piece of sourcefile. */
 export function highlightPosition(loc: Location): void { return post({ command: 'hover_position', loc}); }
+/** Call this to instruct the editor to copy the given text to a comment above the cursor. */
 export function copyToComment(text: string): void {
     post({ command: 'insert_text', text: `/-\n${text}\n-/\n`});
 }
-
+/** Call this to instruct the editor to reveal the given location. */
 export function reveal(loc: Location): void {
     post({ command: 'reveal', loc });
 }
-
+/** Call this to instruct the editor to insert the given text above the given location. */
 export function edit(loc: Location, text: string): void {
     post({ command: 'insert_text', loc, text });
 }
-
+/** Call this to instruct the editor to copy the given text to the clipboard. */
 export function copyText(text: string): void {
     post({ command: 'copy_text', text});
 }
-
+/** Call this to tell the editor that the pins have updated.
+ * This is needed because if the user inserts text above a pinned location,
+ * the editor needs to recalculate the position of the pin, once this is done the
+ * `SyncPinEvent` is fired with the new pin locations.
+ */
 export function syncPin(pins: PinnedLocation[]) {
     post({ command: 'sync_pin', pins});
 }
-
-
+/** Fired whenever the user changes their cursor position in the source file. */
 export const PositionEvent: Event<Location> = new Event();
+/** The location as of the last firing of `PositionEvent`. */
 export let globalCurrentLoc: Location = null;
 PositionEvent.on((loc) => globalCurrentLoc = loc);
 
+/** The current config as of the last firing of `ConfigEvent`. */
 export let currentConfig: Config = defaultConfig;
+/** Triggers whenever the config is changed. */
 export const ConfigEvent: Event<Config> = new Event();
 
 ConfigEvent.on(c => {
     console.log('config updated: ', c);
 });
+/** Triggered when the user inserts text and causes pin locations to change. */
 export const SyncPinEvent: Event<{pins: PinnedLocation[]}> = new Event();
+/** Fired when the user triggers a pause command (external to the infoview). */
 export const PauseEvent: Event<unknown> = new Event();
+/** Fired when the user triggers a continue command (external to the infoview). */
 export const ContinueEvent: Event<unknown> = new Event();
+/** Fired when the user triggers a toggle updating command (external to the infoview). */
 export const ToggleUpdatingEvent: Event<unknown> = new Event();
+/** Fired when the user triggers a copy to comment command (external to the infoview). */
 export const CopyToCommentEvent: Event<unknown> = new Event();
+/** Fired when the user triggers a toggle pin command (external to the infoview). */
 export const TogglePinEvent: Event<unknown> = new Event();
+/** Fired when the lean server restarts. */
 export const ServerRestartEvent: Event<unknown> = new Event();
+/** Fired when all messages change. */
 export const AllMessagesEvent: Event<Message[]> = new Event();
+/** Fired when the user triggers a toggle all messages command (external to the infoview). */
 export const ToggleAllMessagesEvent: Event<unknown> = new Event();
-
+/** All of the messages as of the last 'AllMessagesEvent'. */
 export let currentAllMessages: Message[] = [];
 AllMessagesEvent.on((msgs) => currentAllMessages = msgs);
 ServerRestartEvent.on(() => currentAllMessages = []);
@@ -138,6 +156,7 @@ class ProxyConnectionClient implements Connection {
     }
 }
 
+/** Global instance of the lean server. */
 export const global_server = new Server(new ProxyTransport());
 global_server.logMessagesToConsole = true;
 global_server.allMessages.on(x => AllMessagesEvent.fire(x.msgs));
