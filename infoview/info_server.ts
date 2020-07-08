@@ -3,8 +3,8 @@ import { Location, PinnedLocation, Config } from './extension';
 
 /** a singleton class containing all of the information and events and triggers needed to render an infoview. */
 export interface InfoServer {
-    lean: Server;
-    currentAllMessages: Message[];
+    readonly lean: Server;
+    readonly currentAllMessages: Message[];
 
     /** Call this to instruct the editor to remove all highlighting. */
     clearHighlight(): void;
@@ -43,10 +43,10 @@ export interface InfoServer {
     ToggleAllMessagesEvent: Event<unknown>;
     /** Triggered when messages change. */
     AllMessagesEvent: Event<Message[]>;
-    /** Triggers whenever the config is changed. */
-    ConfigEvent: Event<Config>;
-    /** Fired whenever the user changes their cursor position in the source file. */
-    PositionEvent: Event<Location>;
+    // /** Triggers whenever the config is changed. */
+    // ConfigEvent: Event<Config>;
+    // /** Fired whenever the user changes their cursor position in the source file. */
+    // PositionEvent: Event<Location>;
 
     dispose();
 }

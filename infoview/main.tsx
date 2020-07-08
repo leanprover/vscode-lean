@@ -35,25 +35,26 @@ function StatusView(props: ServerStatus) {
     </Details>
 }
 
-export function Main(props: { server: InfoServer }) {
+interface InfoViewProps {
+    server: InfoServer;
+    loc?: Location;
+    config: Config;
+}
+
+export function InfoView(props: InfoViewProps) {
     if (!props || !props.server) { return null; }
-    const server = props.server;
-    const [config, setConfig] = React.useState(defaultConfig);
-    useEvent(server.ConfigEvent, (cfg) => setConfig(cfg), []);
+    const {server, config, loc} = props;
 
     const [messages, setMessages] = React.useState<Message[]>([]);
     useEvent(server.AllMessagesEvent, (msgs) => setMessages(msgs));
     useEvent(server.ServerRestartEvent, _ => setMessages([]));
 
-    const [curLoc, setCurLoc] = React.useState<Location>(null);
-    useEvent(server.PositionEvent, (loc) => setCurLoc(loc), []);
-
-    if (!curLoc) return <p>Click somewhere in the Lean file to enable the info view.</p>;
-    const allMessages = processMessages(messages.filter((m) => curLoc && m.file_name === curLoc.file_name));
+    if (!loc) return <p>Click somewhere in the Lean file to enable the info view.</p>;
+    const allMessages = processMessages(messages.filter((m) => loc && m.file_name === loc.file_name));
     return <InfoServerContext.Provider value={server}>
         <ConfigContext.Provider value={config}>
             <div className="ma1">
-                <Infos curLoc={curLoc} />
+                <Infos curLoc={loc} />
                 <div className="mv2"><AllMessages allMessages={allMessages} /></div>
             </div>
         </ConfigContext.Provider>

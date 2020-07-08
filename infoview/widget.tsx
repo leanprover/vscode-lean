@@ -4,7 +4,6 @@ import * as ReactPopper from 'react-popper';
 import './popper.css';
 import { WidgetComponent, WidgetHtml, WidgetElement, WidgetEventRequest, WidgetIdentifier } from 'lean-client-js-core';
 import { InfoServer } from './info_server';
-import { Server } from 'http';
 import { InfoServerContext } from './main';
 
 function Popper(props: {children: React.ReactNode[]; popperContent: any; refEltTag: any; refEltAttrs: any}) {
