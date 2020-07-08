@@ -8,7 +8,7 @@ export {trythis};
 import * as c2cimg from '../media/copy-to-comment-light.svg';
 export {c2cimg};
 
-export * from '../src/shared';
+export {Location, Config, ServerStatus, PinnedLocation, defaultConfig, locationEq} from '../src/shared';
 
 import { Server, Transport, Connection, Event, TransportError, Message } from 'lean-client-js-core';
 import { ToInfoviewMessage, FromInfoviewMessage, Config, Location, defaultConfig, PinnedLocation } from '../src/shared';
