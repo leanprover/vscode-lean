@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { colorizeMessage, escapeHtml } from './util';
-import { ConfigContext } from './index';
+import { ConfigContext } from './Main';
 
 interface GoalProps {
     goalState: string;

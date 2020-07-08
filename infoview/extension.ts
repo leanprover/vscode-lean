@@ -1,9 +1,22 @@
+/* This file contains everything that is specific to the vscode extension
+implementation of the infoview. So the idea is that lean-web-editor
+shares the rest of this infoview directory with this project. */
+
+import * as trythis from '../src/trythis';
+export {trythis};
+
+import * as c2cimg from '../media/copy-to-comment-light.svg';
+export {c2cimg};
+
+export * from '../src/shared';
+
 import { Server, Transport, Connection, Event, TransportError, Message } from 'lean-client-js-core';
 import { ToInfoviewMessage, FromInfoviewMessage, Config, Location, defaultConfig, PinnedLocation } from '../src/shared';
+
 declare const acquireVsCodeApi;
 const vscode = acquireVsCodeApi();
 
-export function post(message: FromInfoviewMessage): void { // send a message to the extension
+function post(message: FromInfoviewMessage): void { // send a message to the extension
     vscode.postMessage(message);
 }
 
@@ -24,6 +37,11 @@ export function edit(loc: Location, text: string): void {
 export function copyText(text: string): void {
     post({ command: 'copy_text', text});
 }
+
+export function syncPin(pins: PinnedLocation[]) {
+    post({ command: 'sync_pin', pins});
+}
+
 
 export const PositionEvent: Event<Location> = new Event();
 export let globalCurrentLoc: Location = null;

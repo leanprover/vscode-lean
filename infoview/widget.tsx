@@ -2,8 +2,8 @@
 import * as React from 'react';
 import * as ReactPopper from 'react-popper';
 import './popper.css';
-import { WidgetComponent, WidgetHtml, WidgetElement, WidgetEventRequest, WidgetIdentifier } from 'lean-client-js-node';
-import { global_server, edit, reveal, highlightPosition, clearHighlight, copyText } from './server';
+import { WidgetComponent, WidgetHtml, WidgetElement, WidgetEventRequest, WidgetIdentifier } from 'lean-client-js-core';
+import { edit, reveal, highlightPosition, clearHighlight, copyText, global_server } from './extension';
 
 function Popper(props: {children: React.ReactNode[]; popperContent: any; refEltTag: any; refEltAttrs: any}) {
     const { children, popperContent, refEltTag, refEltAttrs } = props;

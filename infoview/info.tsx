@@ -1,7 +1,7 @@
-import { Location } from '../src/shared';
 import * as React from 'react';
-import { post, CopyToCommentEvent, copyToComment, PauseEvent, ContinueEvent, ToggleUpdatingEvent, global_server, ServerRestartEvent, AllMessagesEvent, currentAllMessages } from './server';
-import { LocationContext, ConfigContext } from '.';
+import { global_server, ServerRestartEvent, AllMessagesEvent, currentAllMessages, CopyToCommentEvent,
+    copyToComment, PauseEvent, ContinueEvent, ToggleUpdatingEvent, reveal, Location } from './extension';
+import { LocationContext, ConfigContext } from './Main';
 import { Widget } from './widget';
 import { Goal } from './goal';
 import { Messages, processMessages, ProcessedMessage, GetMessagesFor } from './messages';
@@ -43,9 +43,10 @@ const statusColTable: {[T in InfoStatus]: string} = {
 
 interface InfoProps {
     loc: Location;
-    isPinned: boolean;
-    isCursor: boolean;
-    onPin: (new_pin_state: boolean) => void;
+    isPinned?: boolean; // defaults to false
+    isCursor?: boolean; // defaults to true
+    /** If undefined then the pin icon will not appear and we assume pinning feature is disabled */
+    onPin?: (new_pin_state: boolean) => void;
 }
 
 function isLoading(ts: CurrentTasksResponse, l: Location): boolean {
@@ -141,7 +142,9 @@ function infoState(isPaused: boolean, loc: Location): InfoState {
 }
 
 export function Info(props: InfoProps): JSX.Element {
-    const {isCursor, isPinned, onPin} = props;
+    const isCursor = props.isCursor ?? true;
+    const isPinned = props.isPinned ?? false;
+    const onPin = props.onPin;
 
     const [isPaused, setPaused] = React.useState<boolean>(false);
     const isCurrentlyPaused = React.useRef<boolean>();
@@ -190,8 +193,8 @@ export function Info(props: InfoProps): JSX.Element {
                 {isPinned && isPaused && ' (pinned and paused)'}
                 <span className="fr">
                     {goalState && <a className="link pointer mh2 dim" title="copy state to comment" onClick={e => {e.preventDefault(); copyGoalToComment()}}><CopyToCommentIcon/></a>}
-                    {isPinned && <a className={'link pointer mh2 dim '} onClick={e => { e.preventDefault(); post({command: 'reveal', loc}); }} title="reveal file location"><GoToFileIcon/></a>}
-                    <a className="link pointer mh2 dim" onClick={e => { e.preventDefault(); onPin(!isPinned)}} title={isPinned ? 'unpin' : 'pin'}>{isPinned ? <PinnedIcon/> : <PinIcon/>}</a>
+                    {isPinned && <a className={'link pointer mh2 dim '} onClick={e => { e.preventDefault(); reveal(loc); }} title="reveal file location"><GoToFileIcon/></a>}
+                    {onPin && <a className="link pointer mh2 dim" onClick={e => { e.preventDefault(); onPin(!isPinned)}} title={isPinned ? 'unpin' : 'pin'}>{isPinned ? <PinnedIcon/> : <PinIcon/>}</a>}
                     <a className="link pointer mh2 dim" onClick={e => { e.preventDefault(); setPaused(!isPaused)}} title={isPaused ? 'continue updating' : 'pause updating'}>{isPaused ? <ContinueIcon/> : <PauseIcon/>}</a>
                     { !isPaused && <a className={'link pointer mh2 dim'} onClick={e => { e.preventDefault(); forceUpdate(); }} title="update"><RefreshIcon/></a> }
                 </span>

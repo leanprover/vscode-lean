@@ -8,7 +8,7 @@ https://github.com/microsoft/vscode-codicons/blob/master/LICENSE
 */
 
 import * as React from 'react';
-import * as c2cimg from '../media/copy-to-comment-light.svg';
+import { c2cimg } from './extension';
 
 function Svg(props: {src: {attributes: {}; content: string}}) {
     const {src} = props;

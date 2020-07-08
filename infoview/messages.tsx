@@ -1,11 +1,9 @@
 import { basename, escapeHtml, colorizeMessage } from './util';
-import { Message } from 'lean-client-js-node';
+import { Message } from 'lean-client-js-core';
 import * as React from 'react';
-import { Location, Config } from '../src/shared';
 import { CopyToCommentIcon, GoToFileIcon } from './svg_icons';
-import { copyToComment, reveal } from './server';
 import { Widget } from './widget';
-import * as trythis from '../src/trythis';
+import { trythis, Location, Config, reveal, copyToComment} from './extension';
 
 function compareMessages(m1: Message, m2: Message): boolean {
     return m1.file_name === m2.file_name &&
