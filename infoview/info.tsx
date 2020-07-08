@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { global_server, ServerRestartEvent, AllMessagesEvent, currentAllMessages, CopyToCommentEvent,
-    copyToComment, PauseEvent, ContinueEvent, ToggleUpdatingEvent, reveal, Location } from './extension';
-import { LocationContext, ConfigContext } from './Main';
+import { Location } from './extension';
+import { LocationContext, ConfigContext, InfoServerContext } from './main';
 import { Widget } from './widget';
 import { Goal } from './goal';
 import { Messages, processMessages, ProcessedMessage, GetMessagesFor } from './messages';
@@ -92,7 +91,8 @@ interface InfoState {
 }
 
 function infoState(isPaused: boolean, loc: Location): InfoState {
-    const loading = useMappedEvent(global_server.tasks, false, (t) => isLoading(t, loc), [loc]);
+    const server = React.useContext(InfoServerContext);
+    const loading = useMappedEvent(server.lean.tasks, false, (t) => isLoading(t, loc), [loc]);
 
     const [response, setResponse] = React.useState<InfoResponse>();
     const [error, setError] = React.useState<string>();
@@ -104,7 +104,7 @@ function infoState(isPaused: boolean, loc: Location): InfoState {
             return;
         }
         try {
-            const info = await global_dispatcher.run(() => global_server.info(loc.file_name, loc.line, loc.column));
+            const info = await global_dispatcher.run(() => server.lean.info(loc.file_name, loc.line, loc.column));
             const widget = info.record && info.record.widget;
             if (widget && widget.line === undefined) {
                 widget.line = loc.line;
@@ -125,23 +125,24 @@ function infoState(isPaused: boolean, loc: Location): InfoState {
         }
     });
 
-    const tasksFinished = useMappedEvent(global_server.tasks, true, (t) => isDone(t) ? new Object() : false);
+    const tasksFinished = useMappedEvent(server.lean.tasks, true, (t) => isDone(t) ? new Object() : false);
     React.useEffect(() => triggerUpdate(), [loc, isPaused, tasksFinished]);
-    useEvent(ServerRestartEvent, triggerUpdate);
-    useEvent(global_server.error, triggerUpdate);
+    useEvent(server.ServerRestartEvent, triggerUpdate);
+    useEvent(server.lean.error, triggerUpdate);
 
     const config = React.useContext(ConfigContext);
     const [messages, setMessages] = React.useState<ProcessedMessage[]>([]);
     const updateMsgs = (msgs: Message[]) => {
         setMessages(loc ? processMessages(GetMessagesFor(msgs, loc, config)) : []);
     };
-    React.useEffect(() => updateMsgs(currentAllMessages), []);
-    useEvent(AllMessagesEvent, updateMsgs, [loc, config]);
+    React.useEffect(() => updateMsgs(server.currentAllMessages), []);
+    useEvent(server.AllMessagesEvent, updateMsgs, [loc, config]);
 
     return { loc, loading, response, error, messages, triggerUpdate };
 }
 
 export function Info(props: InfoProps): JSX.Element {
+    const server = React.useContext(InfoServerContext);
     const isCursor = props.isCursor ?? true;
     const isPinned = props.isPinned ?? false;
     const onPin = props.onPin;
@@ -157,15 +158,15 @@ export function Info(props: InfoProps): JSX.Element {
 
     function copyGoalToComment() {
         const goal = info.record && info.record.state;
-        if (goal) copyToComment(goal);
+        if (goal) server.copyToComment(goal);
     }
 
     // If we are the cursor infoview, then we should subscribe to
     // some commands from the extension
-    useEvent(CopyToCommentEvent, () => isCursor && copyGoalToComment(), [isCursor, info]);
-    useEvent(PauseEvent, () => isCursor && setPaused(true), [isCursor]);
-    useEvent(ContinueEvent, () => isCursor && setPaused(false), [isCursor]);
-    useEvent(ToggleUpdatingEvent, () => isCursor && setPaused(!isCurrentlyPaused.current), [isCursor]);
+    useEvent(server.CopyToCommentEvent, () => isCursor && copyGoalToComment(), [isCursor, info]);
+    useEvent(server.PauseEvent, () => isCursor && setPaused(true), [isCursor]);
+    useEvent(server.ContinueEvent, () => isCursor && setPaused(false), [isCursor]);
+    useEvent(server.ToggleUpdatingEvent, () => isCursor && setPaused(!isCurrentlyPaused.current), [isCursor]);
 
     const [displayMode, setDisplayMode] = React.useState<'widget' | 'text'>('widget');
     const widgetModeSwitcher =
@@ -193,7 +194,7 @@ export function Info(props: InfoProps): JSX.Element {
                 {isPinned && isPaused && ' (pinned and paused)'}
                 <span className="fr">
                     {goalState && <a className="link pointer mh2 dim" title="copy state to comment" onClick={e => {e.preventDefault(); copyGoalToComment()}}><CopyToCommentIcon/></a>}
-                    {isPinned && <a className={'link pointer mh2 dim '} onClick={e => { e.preventDefault(); reveal(loc); }} title="reveal file location"><GoToFileIcon/></a>}
+                    {isPinned && <a className={'link pointer mh2 dim '} onClick={e => { e.preventDefault(); server.reveal(loc); }} title="reveal file location"><GoToFileIcon/></a>}
                     {onPin && <a className="link pointer mh2 dim" onClick={e => { e.preventDefault(); onPin(!isPinned)}} title={isPinned ? 'unpin' : 'pin'}>{isPinned ? <PinnedIcon/> : <PinIcon/>}</a>}
                     <a className="link pointer mh2 dim" onClick={e => { e.preventDefault(); setPaused(!isPaused)}} title={isPaused ? 'continue updating' : 'pause updating'}>{isPaused ? <ContinueIcon/> : <PauseIcon/>}</a>
                     { !isPaused && <a className={'link pointer mh2 dim'} onClick={e => { e.preventDefault(); forceUpdate(); }} title="update"><RefreshIcon/></a> }

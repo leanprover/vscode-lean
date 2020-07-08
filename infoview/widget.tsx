@@ -3,7 +3,9 @@ import * as React from 'react';
 import * as ReactPopper from 'react-popper';
 import './popper.css';
 import { WidgetComponent, WidgetHtml, WidgetElement, WidgetEventRequest, WidgetIdentifier } from 'lean-client-js-core';
-import { edit, reveal, highlightPosition, clearHighlight, copyText, global_server } from './extension';
+import { InfoServer } from './info_server';
+import { Server } from 'http';
+import { InfoServerContext } from './main';
 
 function Popper(props: {children: React.ReactNode[]; popperContent: any; refEltTag: any; refEltAttrs: any}) {
     const { children, popperContent, refEltTag, refEltAttrs } = props;
@@ -68,16 +70,16 @@ export type WidgetEffect =
 | {kind: 'custom'; key: string; value: string}
 | {kind: 'copy_text'; text: string}
 
-function applyWidgetEffect(widget: WidgetIdentifier, file_name: string, effect: WidgetEffect) {
+function applyWidgetEffect(server: InfoServer, widget: WidgetIdentifier, file_name: string, effect: WidgetEffect) {
     switch (effect.kind) {
         case 'insert_text':
             const loc = {file_name, line: widget.line, column: widget.column};
-            edit(loc, effect.text);
+            server.edit(loc, effect.text);
             break;
-        case 'reveal_position': reveal({file_name: effect.file_name || file_name, line: effect.line, column: effect.column}); break;
-        case 'highlight_position': highlightPosition({file_name: effect.file_name || file_name, line: effect.line, column: effect.column}); break;
-        case 'clear_highlighting': clearHighlight(); break;
-        case 'copy_text': copyText(effect.text); break;
+        case 'reveal_position': server.reveal({file_name: effect.file_name || file_name, line: effect.line, column: effect.column}); break;
+        case 'highlight_position': server.highlightPosition({file_name: effect.file_name || file_name, line: effect.line, column: effect.column}); break;
+        case 'clear_highlighting': server.clearHighlight(); break;
+        case 'copy_text': server.copyText(effect.text); break;
         case 'custom':
             console.log(`Custom widget effect: ${effect.key} -- ${effect.value}`);
             break;
@@ -89,9 +91,10 @@ function applyWidgetEffect(widget: WidgetIdentifier, file_name: string, effect: 
 
 export const Widget = React.memo(({ widget, fileName }: WidgetProps) => {
     const [html, setHtml] = React.useState<WidgetComponent>();
+    const server = React.useContext(InfoServerContext);
     React.useEffect(() => {
         async function loadHtml() {
-            setHtml((await global_server.send({
+            setHtml((await server.lean.send({
                 command: 'get_widget',
                 line: widget.line,
                 column: widget.column,
@@ -115,21 +118,21 @@ export const Widget = React.memo(({ widget, fileName }: WidgetProps) => {
             file_name: fileName,
             ...e,
         };
-        const update_result = await global_server.send(message);
+        const update_result = await server.lean.send(message);
         if (!update_result.record) { return; }
         const record = update_result.record;
         if (record.status === 'success' && record.widget) {
             const effects: WidgetEffect[] | undefined = (record as any).effects;
             if (effects) {
                 for (const effect of effects) {
-                    applyWidgetEffect(widget, fileName, effect);
+                    applyWidgetEffect(server, widget, fileName, effect);
                 }
             }
             setHtml(record.widget.html);
         } else if (record.status === 'edit') {
             // Lean < 3.17
             const loc = { line: widget.line, column: widget.column, file_name: fileName };
-            edit(loc, record.action);
+            server.edit(loc, record.action);
             setHtml(record.widget.html);
         } else if (record.status === 'invalid_handler') {
             console.warn(`No widget_event update for ${message.handler}: invalid handler.`)

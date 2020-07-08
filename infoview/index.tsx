@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Main } from './Main';
+import { Main } from './main';
+import { VSCodeInfoServer } from './extension';
 
 const domContainer = document.querySelector('#infoview_root');
-ReactDOM.render(<Main/>, domContainer);
+const server = new VSCodeInfoServer();
+ReactDOM.render(<Main server={server}/>, domContainer);
