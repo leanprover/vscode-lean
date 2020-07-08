@@ -23,11 +23,13 @@ const MessageView = React.memo(({m}: MessageViewProps) => {
     const loc: Location = {file_name: m.file_name, column: c, line: l}
     const shouldColorize = m.severity === 'error';
     let text = escapeHtml(m.text)
-    text = text.replace(trythis.regexGM, (_, tactic) => {
-        const command = encodeURI('command:_lean.pasteTacticSuggestion?' +
-            JSON.stringify([m, tactic]));
-        return `${trythis.magicWord}<a class="link" href="${command}" title="${tactic}">${tactic}</a>`
-    });
+    if (trythis) {
+        text = text.replace(trythis.regexGM, (_, tactic) => {
+            const command = encodeURI('command:_lean.pasteTacticSuggestion?' +
+                JSON.stringify([m, tactic]));
+            return `${trythis.magicWord}<a class="link" href="${command}" title="${tactic}">${tactic}</a>`
+        });
+    }
     text = shouldColorize ? colorizeMessage(text) : text;
     const title = `${b}:${l}:${c}`;
     return <details open>
