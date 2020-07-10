@@ -6,7 +6,6 @@
 		"jsx": "react",
 		"typeRoots": [
 			"../node_modules/@types",
-			"../src/typings/"
 		],
 		"sourceMap": true,
 		"strict": false,
@@ -19,6 +18,5 @@
 	},
 	"include": [
 		"./**/*",
-		"../src/typings/*"
 	]
 }

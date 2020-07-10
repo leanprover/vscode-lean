@@ -4,7 +4,7 @@ import { CodeActionContext, CodeActionProvider, Command, commands,
     Position, Range, Selection, TextDocument, TextEditor, Uri, window } from 'vscode';
 import { InfoProvider } from './infoview';
 import { Server } from './server';
-import { regexGM, magicWord, regexM } from './trythis';
+import { regexGM, magicWord, regexM } from '../infoview/trythis';
 
 /** Pastes suggestions provided by tactics such as `squeeze_simp` */
 export class TacticSuggestions implements Disposable, CodeActionProvider {

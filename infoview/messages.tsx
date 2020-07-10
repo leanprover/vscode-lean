@@ -1,11 +1,11 @@
 import { basename, escapeHtml, colorizeMessage } from './util';
-import { Message } from 'lean-client-js-node';
+import { Message } from 'lean-client-js-core';
 import * as React from 'react';
-import { Location, Config } from '../src/shared';
 import { CopyToCommentIcon, GoToFileIcon } from './svg_icons';
-import { copyToComment, reveal } from './server';
 import { Widget } from './widget';
-import * as trythis from '../src/trythis';
+import { Location, Config} from './types';
+import { InfoServerContext } from './main';
+import * as trythis from './trythis';
 
 function compareMessages(m1: Message, m2: Message): boolean {
     return m1.file_name === m2.file_name &&
@@ -20,23 +20,26 @@ interface MessageViewProps {
 }
 
 const MessageView = React.memo(({m}: MessageViewProps) => {
+    const server = React.useContext(InfoServerContext);
     const b = escapeHtml(basename(m.file_name));
     const l = m.pos_line; const c = m.pos_col;
     const loc: Location = {file_name: m.file_name, column: c, line: l}
     const shouldColorize = m.severity === 'error';
     let text = escapeHtml(m.text)
-    text = text.replace(trythis.regexGM, (_, tactic) => {
-        const command = encodeURI('command:_lean.pasteTacticSuggestion?' +
-            JSON.stringify([m, tactic]));
-        return `${trythis.magicWord}<a class="link" href="${command}" title="${tactic}">${tactic}</a>`
-    });
+    if (trythis) {
+        text = text.replace(trythis.regexGM, (_, tactic) => {
+            const command = encodeURI('command:_lean.pasteTacticSuggestion?' +
+                JSON.stringify([m, tactic]));
+            return `${trythis.magicWord}<a class="link" href="${command}" title="${tactic}">${tactic}</a>`
+        });
+    }
     text = shouldColorize ? colorizeMessage(text) : text;
     const title = `${b}:${l}:${c}`;
     return <details open>
         <summary className={m.severity + ' mv2 pointer'}>{title}
                 <span className="fr">
-                    <a className={'link pointer mh2 dim '} onClick={e => { e.preventDefault(); reveal(loc); }} title="reveal file location"><GoToFileIcon/></a>
-                    { m.widget ? null : <a className="link pointer mh2 dim" title="copy message to comment" onClick={e => {e.preventDefault(); copyToComment(m.text)}}><CopyToCommentIcon/></a> }
+                    <a className={'link pointer mh2 dim '} onClick={e => { e.preventDefault(); server.reveal(loc); }} title="reveal file location"><GoToFileIcon/></a>
+                    { m.widget ? null : <a className="link pointer mh2 dim" title="copy message to comment" onClick={e => {e.preventDefault(); server.copyToComment(m.text)}}><CopyToCommentIcon/></a> }
                 </span>
         </summary>
         <div className="ml1">

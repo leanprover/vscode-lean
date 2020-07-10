@@ -8,7 +8,6 @@ https://github.com/microsoft/vscode-codicons/blob/master/LICENSE
 */
 
 import * as React from 'react';
-import * as c2cimg from '../media/copy-to-comment-light.svg';
 
 function Svg(props: {src: {attributes: {}; content: string}}) {
     const {src} = props;
@@ -18,8 +17,18 @@ function Svg(props: {src: {attributes: {}; content: string}}) {
 }
 
 export function CopyToCommentIcon(): JSX.Element {
-    return <Svg src={c2cimg}/>
+    return <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+        <g>
+            <path d="M 5 1.5 V 5 L 9.5 4 Z" />
+            <rect x="9" width="10" y="3.5" height="1.5" />
+            <rect x="9" width="6" y="5.5" height="1" />
+            <rect x="9" width="8" y="7.5" height="1" />
+            <rect x="6" width="14" y="11" height="3" />
+            <path d="M 1 12.5 L 6 9.5 V 15.5 Z" />
+        </g>
+    </svg>;
 }
+
 
 export function PinIcon(): JSX.Element {
     return <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M15.418 4.5l-.866-.375-1.459 1.46-4.016-.649a2.97 2.97 0 0 0-.94-1.322A2.893 2.893 0 0 0 6.65 3l-.498.498.055 3.818L.5 7.309l1.036 1.036h4.691l.041 3.355.518.518a2.71 2.71 0 0 0 2.36-1.868l4.002-.525 1.5 1.5.852-.348-.082-6.477zm-1.725 4.452l-.436-.15-4.514.6-.389.307a2.507 2.507 0 0 1-1.063 1.377V8.36l-.055-4.186c.513.335.9.831 1.098 1.411l.402.32 4.534.73.423-.136.784-.784.055 4.036-.839-.798z"/></svg>

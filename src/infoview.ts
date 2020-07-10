@@ -359,7 +359,7 @@ export class InfoProvider implements Disposable {
                 <style>${this.stylesheet}</style>
             </head>
             <body>
-                <div id="react_root"></div>
+                <div id="infoview_root"></div>
                 <script src="${this.getMediaPath('index.js')}"></script>
             </body>
             </html>`
