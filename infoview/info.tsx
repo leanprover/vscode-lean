@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Location } from './extension';
 import { LocationContext, ConfigContext, InfoServerContext } from './main';
 import { Widget } from './widget';
 import { Goal } from './goal';
@@ -8,6 +7,7 @@ import { basename, useEvent } from './util';
 import { CopyToCommentIcon, PinnedIcon, PinIcon, ContinueIcon, PauseIcon, RefreshIcon, GoToFileIcon } from './svg_icons';
 import { Details } from './collapsing';
 import { Event, InfoResponse, CurrentTasksResponse, Message } from 'lean-client-js-core';
+import { Location } from './types';
 
 /** Older versions of Lean can't deal with multiple simul info requests so this just prevents that. */
 class OneAtATimeDispatcher {

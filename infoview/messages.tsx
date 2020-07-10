@@ -3,8 +3,9 @@ import { Message } from 'lean-client-js-core';
 import * as React from 'react';
 import { CopyToCommentIcon, GoToFileIcon } from './svg_icons';
 import { Widget } from './widget';
-import { trythis, Location, Config} from './extension';
+import { Location, Config} from './types';
 import { InfoServerContext } from './main';
+import * as trythis from './trythis';
 
 function compareMessages(m1: Message, m2: Message): boolean {
     return m1.file_name === m2.file_name &&

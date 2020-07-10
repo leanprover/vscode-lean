@@ -1,5 +1,5 @@
 import { Server, Message, Event } from 'lean-client-js-core';
-import { Location, PinnedLocation, Config } from './extension';
+import { Location, PinnedLocation } from './types';
 
 /** a singleton class containing all of the information and events and triggers needed to render an infoview. */
 export interface InfoServer {
@@ -43,10 +43,6 @@ export interface InfoServer {
     ToggleAllMessagesEvent: Event<unknown>;
     /** Triggered when messages change. */
     AllMessagesEvent: Event<Message[]>;
-    // /** Triggers whenever the config is changed. */
-    // ConfigEvent: Event<Config>;
-    // /** Fired whenever the user changes their cursor position in the source file. */
-    // PositionEvent: Event<Location>;
 
     dispose();
 }

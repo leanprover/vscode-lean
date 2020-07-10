@@ -1,6 +1,7 @@
-import { FromInfoviewMessage, PinnedLocation, Location, ToInfoviewMessage, Config, defaultConfig } from '../src/shared';
+import { FromInfoviewMessage, PinnedLocation, Location, ToInfoviewMessage, Config } from '../src/shared';
 import {Event, Connection, Transport, TransportError, Server, Message} from 'lean-client-js-core'
 import { InfoServer } from './info_server';
+import { defaultConfig } from './types';
 
 class ProxyTransport implements Transport {
     connect(): Connection {

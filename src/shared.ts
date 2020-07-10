@@ -1,30 +1,8 @@
 /* This file contains all of the types that are common to the extension and the infoview. */
 
 import {  Message, Task } from 'lean-client-js-node';
-
-// import { ServerStatus } from './server';
-
-// [todo] this is probably already defined somewhere
-export interface Location {
-    file_name: string;
-    line: number;
-    column: number;
-}
-
-export interface PinnedLocation extends Location {
-    key: number;
-}
-
-export function locationEq(l1: Location, l2: Location): boolean {
-    return l1.column === l2.column && l1.line === l2.line && l1.file_name === l2.file_name
-}
-
-export interface ServerStatus {
-    stopped: boolean;
-    isRunning: boolean;
-    numberOfTasks: number;
-    tasks: Task[];
-}
+import {Location, Config, PinnedLocation, InfoViewTacticStateFilter, locationEq} from '../infoview/types';
+export {Location, Config, PinnedLocation, InfoViewTacticStateFilter, locationEq}
 
 export interface InfoProps extends Location {
     widget?: string; // [note] vscode crashes if the widget is sent as a deeply nested json object.
@@ -34,32 +12,11 @@ export interface InfoProps extends Location {
     base_name: string;     // = basename(fileName)
 }
 
-export interface InfoViewTacticStateFilter {
-    name?: string;
-    regex: string;
-    match: boolean;
-    flags: string;
-}
-
-export interface Config {
-    filterIndex: number;
-    infoViewTacticStateFilters: InfoViewTacticStateFilter[];
-    infoViewAllErrorsOnLine: boolean;
-    infoViewAutoOpenShowGoal: boolean;
-}
-export const defaultConfig: Config = {
-    filterIndex: -1,
-    infoViewTacticStateFilters: [],
-    infoViewAllErrorsOnLine: true,
-    infoViewAutoOpenShowGoal: true,
-}
 
 /** The root state of the infoview */
 export interface InfoViewState {
     cursorInfo: InfoProps;
     pinnedInfos: InfoProps[];
-    // serverStatus: ServerStatus;
-
     config: Config;
 
     messages: Message[];

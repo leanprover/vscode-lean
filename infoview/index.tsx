@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import { InfoView } from './main';
 import { VSCodeInfoServer } from './vscode_info_server';
 import { useEvent } from './util';
-import { defaultConfig, Location } from './extension';
+import { defaultConfig, Location } from './types';
 
 const domContainer = document.querySelector('#infoview_root');
 const server = new VSCodeInfoServer();

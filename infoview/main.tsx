@@ -1,4 +1,3 @@
-import { ServerStatus, Location, Config, defaultConfig, PinnedLocation, locationEq } from './extension';
 import * as React from 'react';
 import { Message } from 'lean-client-js-core';
 import { Info } from './info';
@@ -9,31 +8,12 @@ import { ContinueIcon, PauseIcon } from './svg_icons';
 import './tachyons.css' // stylesheet assumed by Lean widgets. See https://tachyons.io/ for documentation
 import './index.css'
 import { InfoServer } from './info_server';
+import { Location, Config, PinnedLocation, locationEq } from './types';
 
 export const InfoServerContext = React.createContext<InfoServer>(null);
 export const ConfigContext = React.createContext<Config>(null);
 export const AllMessagesContext = React.createContext<Message[]>([]);
 export const LocationContext = React.createContext<Location | null>(null);
-
-function StatusView(props: ServerStatus) {
-    return <Details>
-        <summary className="mv2 pointer">Tasks</summary>
-        <p>Running: {props.isRunning}</p>
-        <table> <tbody>
-            <tr key="header"><th>File Name</th>
-                <th>Pos start</th>
-                <th>Pos end</th>
-                <th>Desc</th></tr>
-            {props.tasks.map(t => <tr key={`${t.file_name}:${t.pos_col}:${t.pos_line}:${t.desc}`}>
-                <td>{t.file_name}</td>
-                <td>{t.pos_line}:{t.pos_col}</td>
-                <td>{t.end_pos_line}:{t.end_pos_col}</td>
-                <td>{t.desc}</td>
-            </tr>)}
-        </tbody>
-        </table>
-    </Details>
-}
 
 interface InfoViewProps {
     server: InfoServer;
