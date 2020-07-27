@@ -1,0 +1,48 @@
+{
+    "lemma": {
+        "prefix": "lemma",
+        "body": [
+            "lemma ${1:name (args)} : ${2:sorry} := ${3:sorry}"
+        ],
+        "description": "Insert a one-line lemma"
+    },
+    "theorem": {
+        "prefix": "theorem",
+        "body": [
+            "theorem ${1:name (args)} : ${2:sorry} := ${3:sorry}"
+        ],
+        "description": "Insert a one-line lemma"
+    },
+    "example": {
+        "prefix": "example",
+        "body": [
+            "example : ${2:sorry} := ${2:sorry}"
+        ],
+        "description": "Insert a one-line example"
+    },
+	"namespace": {
+        "prefix": "namespace",
+        "body": [
+            "namespace ${1:name}",
+            "$0",
+            "end ${1}"
+        ],
+        "description": "Insert a namespace"
+    },
+	"structure": {
+        "prefix": "structure",
+        "body": [
+            "structure ${1:name} ${2:(args : sorry)}",
+            ":=",
+            "\t${3:(field : sorry)}",
+            "",
+            "namespace ${1:}",
+            "variables ${2:}",
+            "",
+            "",
+            "",
+            "end ${1:}"
+        ],
+        "description": "Insert a structure and matching namespace"
+    }
+}

@@ -8,7 +8,8 @@
 		"vscode": "^1.38.0"
 	},
 	"categories": [
-		"Programming Languages"
+		"Programming Languages",
+		"Snippets"
 	],
 	"repository": {
 		"type": "git",
@@ -342,6 +343,12 @@
 				"key": "alt+v",
 				"mac": "alt+v",
 				"when": "editorTextFocus && editorLangId == lean"
+			}
+		],
+		"snippets": [
+			{
+				"language": "lean",
+				"path": "./snippets/lean.json"
 			}
 		],
 		"menus": {
