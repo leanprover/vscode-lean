@@ -100,6 +100,9 @@ export class InfoProvider implements Disposable {
             commands.registerTextEditorCommand('lean.infoView.copyToComment',() =>
                 this.postMessage({ command: 'copy_to_comment' })
             ),
+            commands.registerTextEditorCommand('lean.infoView.insertFirstGoal',() =>
+                this.postMessage({ command: 'insert_first_goal' })
+            ),
             commands.registerCommand('lean.infoView.toggleUpdating', () => this.postMessage({ command: 'toggle_updating' })),
             commands.registerTextEditorCommand('lean.infoView.toggleStickyPosition', () => this.postMessage({ command: 'toggle_pin' })),
         );
@@ -225,7 +228,7 @@ export class InfoProvider implements Disposable {
                 editor = window.visibleTextEditors[0];
             }
         }
-        if (!editor) {return; }
+        if (!editor) { return; }
         const pos = message.loc ? this.positionOfLocation(message.loc) : editor.selection.active;
         const current_selection_range = editor.selection;
         const cursor_pos = current_selection_range.active;

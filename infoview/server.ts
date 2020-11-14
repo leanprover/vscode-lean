@@ -22,7 +22,7 @@ export function edit(loc: Location, text: string): void {
 }
 
 export function copyText(text: string): void {
-    post({ command: 'copy_text', text});
+    post({ command: 'copy_text', text });
 }
 
 export const PositionEvent: Event<Location> = new Event();
@@ -40,6 +40,7 @@ export const PauseEvent: Event<unknown> = new Event();
 export const ContinueEvent: Event<unknown> = new Event();
 export const ToggleUpdatingEvent: Event<unknown> = new Event();
 export const CopyToCommentEvent: Event<unknown> = new Event();
+export const InsertFirstGoalEvent: Event<unknown> = new Event();
 export const TogglePinEvent: Event<unknown> = new Event();
 export const ServerRestartEvent: Event<unknown> = new Event();
 export const AllMessagesEvent: Event<Message[]> = new Event();
@@ -62,6 +63,7 @@ window.addEventListener('message', event => { // messages from the extension
         case 'continue': ContinueEvent.fire(message); break;
         case 'toggle_updating': ToggleUpdatingEvent.fire(message); break;
         case 'copy_to_comment': CopyToCommentEvent.fire(message); break;
+        case 'insert_first_goal': InsertFirstGoalEvent.fire(message); break;
         case 'toggle_pin': TogglePinEvent.fire(message); break;
         case 'restart': ServerRestartEvent.fire(message); break;
         case 'all_messages': AllMessagesEvent.fire(message.messages); break;

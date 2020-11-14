@@ -1,6 +1,6 @@
 import { Location } from '../src/shared';
 import * as React from 'react';
-import { post, CopyToCommentEvent, copyToComment, PauseEvent, ContinueEvent, ToggleUpdatingEvent, global_server, ServerRestartEvent, AllMessagesEvent, currentAllMessages } from './server';
+import { post, CopyToCommentEvent, InsertFirstGoalEvent, copyToComment, PauseEvent, ContinueEvent, ToggleUpdatingEvent, global_server, ServerRestartEvent, AllMessagesEvent, currentAllMessages, edit } from './server';
 import { LocationContext, ConfigContext } from '.';
 import { Widget } from './widget';
 import { Goal } from './goal';
@@ -9,6 +9,7 @@ import { basename, useEvent } from './util';
 import { CopyToCommentIcon, PinnedIcon, PinIcon, ContinueIcon, PauseIcon, RefreshIcon, GoToFileIcon } from './svg_icons';
 import { Details } from './collapsing';
 import { Event, InfoResponse, CurrentTasksResponse, Message } from 'lean-client-js-core';
+import { match } from 'assert';
 
 /** Older versions of Lean can't deal with multiple simul info requests so this just prevents that. */
 class OneAtATimeDispatcher {
@@ -156,10 +157,16 @@ export function Info(props: InfoProps): JSX.Element {
         const goal = info.record && info.record.state;
         if (goal) copyToComment(goal);
     }
+    const matchFirstGoal = new RegExp(/^⊢ (([^\n]+\n)+[^\n]+)\n\n/m);
+    function insertFirstGoal() {
+        const goal = info.record && info.record.state;
+        if (goal) edit(loc, matchFirstGoal.exec(goal)[1]);
+    }
 
     // If we are the cursor infoview, then we should subscribe to
     // some commands from the extension
     useEvent(CopyToCommentEvent, () => isCursor && copyGoalToComment(), [isCursor, info]);
+    useEvent(InsertFirstGoalEvent, () => isCursor && insertFirstGoal(), [isCursor, info]);
     useEvent(PauseEvent, () => isCursor && setPaused(true), [isCursor]);
     useEvent(ContinueEvent, () => isCursor && setPaused(false), [isCursor]);
     useEvent(ToggleUpdatingEvent, () => isCursor && setPaused(!isCurrentlyPaused.current), [isCursor]);
