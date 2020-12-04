@@ -399,7 +399,7 @@
 			"[lean]": {
 				"editor.tabSize": 2
 			}
-		},
+		}
 	},
 	"activationEvents": [
 		"onLanguage:lean",
