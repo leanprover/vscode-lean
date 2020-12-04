@@ -394,7 +394,12 @@
 					"group": "navigation@2"
 				}
 			]
-		}
+		},
+		"configurationDefaults": {
+			"[lean]": {
+				"editor.tabSize": 2
+			}
+		},
 	},
 	"activationEvents": [
 		"onLanguage:lean",
