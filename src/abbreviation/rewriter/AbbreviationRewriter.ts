@@ -97,6 +97,9 @@ export class AbbreviationRewriter {
 			this.trackedAbbreviations.delete(a);
 		}
 
+		// Never replace empty abbreviations!
+		abbreviations = abbreviations.filter(a => a.abbreviation !== '');
+
 		// Wait for VS Code to trigger `onDidChangeTextEditorSelection`
 		await waitForNextTick();
 
