@@ -198,5 +198,34 @@ export class Server extends leanclient.Server {
             await this.installElan();
         }
     }
+
+    async leanprojectcommand(leanprojcmd : string): Promise<void> {
+        const gitBashPath = 'C:\\Program Files\\Git\\bin\\bash.exe';
+        const msysBashPath = 'C:\\msys64\\usr\\bin\\bash.exe';
+
+        const terminalName = 'Lean Terminal';
+
+        const terminalOptions: TerminalOptions = { name: terminalName };
+        if(process.platform === 'win32') {
+          if(existsSync(gitBashPath)) {
+            terminalOptions.shellPath = gitBashPath;
+            terminalOptions.shellArgs = [];
+          } else if(existsSync(msysBashPath)) {
+            terminalOptions.shellPath = msysBashPath;
+            terminalOptions.shellArgs = ['--login', '-i'];
+          } else {
+              await window.showErrorMessage(
+                "You'll need to install a terminal (e.g. Git for Windows, or MSYS2)\n" +
+                'before we can run terminal commands.');
+              return;
+          }
+        }
+        const terminal = window.createTerminal(terminalOptions);
+
+        // Now show the terminal and run command.
+        terminal.show();
+        terminal.sendText(
+          leanprojcmd + '\n');
+    }
 }
 

@@ -178,7 +178,7 @@
 			{
 				"command": "lean.restartServer",
 				"category": "Lean",
-				"title": "Restart",
+				"title": "Restart Lean Server",
 				"description": "Restart the Language Server."
 			},
 			{
@@ -282,6 +282,198 @@
 				"category": "Lean",
 				"title": "Batch Execute File",
 				"description": "Execute the current file using Lean."
+			},
+			{
+				"command": "lean.command.help",
+				"category": "Lean",
+				"title": "Lean command line help",
+				"description": "Lean command line help."
+			},
+			{
+				"command": "lean.command.version",
+				"category": "Lean",
+				"title": "Check Lean version",
+				"description": "Check Lean version."
+			},
+			{
+				"command": "leanproject.add-mathlib",
+				"category": "Leanproject",
+				"title": "Add mathlib to the current project",
+				"description": "Add mathlib to the current project."
+			},
+			{
+				"command": "leanproject.build",
+				"category": "Leanproject",
+				"title": "Build the current project",
+				"description": "Build the current project."
+			},
+			{
+				"command": "leanproject.check",
+				"category": "Leanproject",
+				"title": "Check mathlib oleans",
+				"description": "Check mathlib oleans are more recent than their sources."
+			},
+			{
+				"command": "leanproject.clean",
+				"category": "Leanproject",
+				"title": "Delete all olean files",
+				"description": "Delete all olean files."
+			},
+			{
+				"command": "leanproject.decls",
+				"category": "Leanproject",
+				"title": "List declarations seen from this project",
+				"description": "List declarations seen from this project."
+			},
+			{
+				"command": "leanproject.delete-zombies",
+				"category": "Leanproject",
+				"title": "Delete Zombie olean files",
+				"description": "Delete olean files with no corresponding .lean files."
+			},
+			{
+				"command": "leanproject.get",
+				"category": "Leanproject",
+				"title": "Clone a project",
+				"description": "Clone a project from a Github name or git url."
+			},
+			{
+				"command": "leanproject.get-cache",
+				"category": "Leanproject",
+				"title": "Restore cached olean files",
+				"description": "Restore cached olean files."
+			},
+			{
+				"command": "leanproject.get-mathlib-cache",
+				"category": "Leanproject",
+				"title": "Get mathlib .lean and .olean files, without upgrading",
+				"description": "Get mathlib .lean and .olean files, without upgrading."
+			},
+			{
+				"command": "leanproject.global-install",
+				"category": "Leanproject",
+				"title": "Install mathlib user-wide",
+				"description": "Install mathlib user-wide."
+			},
+			{
+				"command": "leanproject.global-upgrade",
+				"category": "Leanproject",
+				"title": "Upgrade user-wide mathlib",
+				"description": "Upgrade user-wide mathlib."
+			},
+			{
+				"command": "leanproject.hooks",
+				"category": "Leanproject",
+				"title": "Setup git hooks",
+				"description": "Setup git hooks for the current project."
+			},
+			{
+				"command": "leanproject.import-graph",
+				"category": "Leanproject",
+				"title": "Write an import graph",
+				"description": "Write an import graph for this project."
+			},
+			{
+				"command": "leanproject.mk-all",
+				"category": "Leanproject",
+				"title": "Create all .lean files",
+				"description": "Creates all .lean files importing everything from the project."
+			},
+			{
+				"command": "leanproject.mk-cache",
+				"category": "Leanproject",
+				"title": "Cache olean files",
+				"description": "Cache olean files."
+			},
+			{
+				"command": "leanproject.new",
+				"category": "Leanproject",
+				"title": "Create a new mathlib project",
+				"description": "Create a new mathlib project and prepare mathlib."
+			},
+			{
+				"command": "leanproject.pr",
+				"category": "Leanproject",
+				"title": "Prepare to work on a mathlib pull-request",
+				"description": "Prepare to work on a mathlib pull-request on a new branch."
+			},
+			{
+				"command": "leanproject.rebase",
+				"category": "Leanproject",
+				"title": "On mathlib, upgrade master, get oleans, and rebase",
+				"description": "On mathlib, upgrade master, get oleans, and rebase."
+			},
+			{
+				"command": "leanproject.set-url",
+				"category": "Leanproject",
+				"title": "Set the default url where oleans should be fetched",
+				"description": "Set the default url where oleans should be fetched."
+			},
+			{
+				"command": "leanproject.upgrade-mathlib",
+				"category": "Leanproject",
+				"title": "Upgrade mathlib",
+				"description": "Upgrade mathlib (as a dependency or as the main branch)."
+			},
+			{
+				"command": "leanproject.new",
+				"category": "Leanproject",
+				"title": "Create a new mathlib project",
+				"description": "Create a new mathlib project and prepare mathlib."
+			},
+			{
+				"command": "lean.elan.help",
+				"category": "elan",
+				"title": "elan Help",
+				"description": "Help on elan."
+			},
+			{
+				"command": "lean.elan.show",
+				"category": "elan",
+				"title": "Show active/installed Lean/mathlib toolchains",
+				"description": "Show active/installed Lean/mathlib toolchains."
+			},
+			{
+				"command": "lean.elan.default",
+				"category": "elan",
+				"title": "Set the default toolchain",
+				"description": "Set the default toolchain."
+			},
+			{
+				"command": "lean.elan.update",
+				"category": "elan",
+				"title": "Update Lean toolchains and elan itself",
+				"description": "Update Lean toolchains and elan itself."
+			},
+			{
+				"command": "lean.elan.toolchain",
+				"category": "elan",
+				"title": "Modify or query the installed toolchains",
+				"description": "Modify or query the installed toolchains."
+			},
+			{
+				"command": "lean.elan.override",
+				"category": "elan",
+				"title": "Modify directory toolchain overrides",
+				"description": "Modify directory toolchain overrides."
+			},
+			{
+				"command": "lean.elan.run",
+				"category": "elan",
+				"title": "Run a command with a toolchain environment",
+				"description": "Run a command with an environment configured for a given toolchain."
+			},
+			{
+				"command": "lean.elan.which",
+				"category": "elan",
+				"title": "Display which binary will be run",
+				"description": "Display which binary will be run for a given command."
+			},
+			{
+				"command": "lean.elan.completions",
+				"category": "elan",
+				"title": "Generate completion scripts",
+				"description": "Generate completion scripts for your shell."
 			}
 		],
 		"languages": [
@@ -392,8 +584,192 @@
 					"when": "editorLangId == lean",
 					"group": "navigation@2"
 				}
+			],
+			"editor/context": [
+				{
+					"command": "lean.pasteTacticSuggestion",
+					"group": "navigation@4"
+				},
+				{
+					"submenu": "lean/editor/actions",
+					"group": "5_sub@0"
+				},
+				{
+					"submenu": "lean/editor/context",
+					"group": "5_sub@1"
+				},
+				{
+					"submenu": "lean/editor/context/elan",
+					"group": "5_sub@2"
+				},
+				{
+					"submenu": "lean/editor/lean",
+					"group": "5_sub@3"
+				}
+			],
+			"lean/editor/actions": [
+				{
+					"command": "lean.restartServer",
+					"group": "1_lean@0"
+				},
+				{
+					"command": "lean.batchExecute",
+					"group": "1_lean@1"
+				},
+				{
+					"command": "lean.displayGoal",
+					"group": "1_lean@1"
+				},
+				{
+					"command": "lean.displayList",
+					"group": "1_lean@1"
+				}
+			],
+			"lean/editor/lean": [
+				{
+					"command": "lean.command.help",
+					"group": "1_lean@1"
+				},
+				{
+					"command": "lean.command.version",
+					"group": "1_lean@1"
+				}
+			],
+			"lean/editor/context": [
+				{
+					"command": "leanproject.add-mathlib",
+					"group": "1_lean@1"
+				},
+				{
+					"command": "leanproject.build",
+					"group": "1_lean@1"
+				},
+				{
+					"command": "leanproject.check",
+					"group": "1_lean@1"
+				},
+				{
+					"command": "leanproject.clean",
+					"group": "1_lean@1"
+				},
+				{
+					"command": "leanproject.decls",
+					"group": "1_lean@1"
+				},
+				{
+					"command": "leanproject.delete-zombies",
+					"group": "1_lean@1"
+				},
+				{
+					"command": "leanproject.get",
+					"group": "1_lean@1"
+				},
+				{
+					"command": "leanproject.get-cache",
+					"group": "1_lean@1"
+				},
+				{
+					"command": "leanproject.get-mathlib-cache",
+					"group": "1_lean@1"
+				},
+				{
+					"command": "leanproject.global-install",
+					"group": "1_lean@1"
+				},
+				{
+					"command": "leanproject.global-upgrade",
+					"group": "1_lean@1"
+				},
+				{
+					"command": "leanproject.hooks",
+					"group": "1_lean@1"
+				},
+				{
+					"command": "leanproject.import-graph",
+					"group": "1_lean@1"
+				},
+				{
+					"command": "leanproject.mk-all",
+					"group": "1_lean@1"
+				},
+				{
+					"command": "leanproject.mk-cache",
+					"group": "1_lean@1"
+				},
+				{
+					"command": "leanproject.new",
+					"group": "1_lean@1"
+				},
+				{
+					"command": "leanproject.pr",
+					"group": "1_lean@1"
+				},
+				{
+					"command": "leanproject.rebase",
+					"group": "1_lean@1"
+				},
+				{
+					"command": "leanproject.upgrade-mathlib",
+					"group": "1_lean@1"
+				}
+			],
+			"lean/editor/context/elan": [
+				{
+					"command": "lean.elan.help",
+					"group": "1_elan@1"
+				},
+				{
+					"command": "lean.elan.show",
+					"group": "1_elan@1"
+				},
+				{
+					"command": "lean.elan.default",
+					"group": "1_elan@2"
+				},
+				{
+					"command": "lean.elan.update",
+					"group": "1_elan@1"
+				},
+				{
+					"command": "lean.elan.toolchain",
+					"group": "1_elan@1"
+				},
+				{
+					"command": "lean.elan.override",
+					"group": "1_elan@1"
+				},
+				{
+					"command": "lean.elan.run",
+					"group": "1_elan@1"
+				},
+				{
+					"command": "lean.elan.which",
+					"group": "1_elan@1"
+				},
+				{
+					"command": "lean.elan.completions",
+					"group": "1_elan@1"
+				}
 			]
 		},
+		"submenus": [
+			{
+				"id": "lean/editor/actions",
+				"label": "Lean Actions"
+			},
+			{
+				"id": "lean/editor/lean",
+				"label": "Lean Command Line"
+			},
+			{
+				"id": "lean/editor/context",
+				"label": "Lean Project Commands"
+			},
+			{
+				"id": "lean/editor/context/elan",
+				"label": "elan Commands"
+			}
+		],
 		"configurationDefaults": {
 			"[lean]": {
 				"editor.tabSize": 2

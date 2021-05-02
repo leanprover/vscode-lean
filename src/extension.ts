@@ -43,11 +43,13 @@ const LEAN_MODE: DocumentFilter = {
     // scheme: 'file',
 };
 
+
 export async function activate(context: ExtensionContext): Promise<void> {
     const isLean3 = await checkLean3();
     if (!isLean3) {
         return;
     }
+
 
     void configExcludeOLean();
 
@@ -66,6 +68,65 @@ export async function activate(context: ExtensionContext): Promise<void> {
         commands.registerCommand('lean.restartServer', () => server.restart()),
         commands.registerTextEditorCommand('lean.batchExecute',
             (editor, edit, args) => { batchExecuteFile(server, editor, edit, args); }),
+    );
+    // TODO POINT TO CORRECT COMMAND XXXX
+    context.subscriptions.push(
+        commands.registerCommand('lean.command.help',
+        () => server.leanprojectcommand('lean -h')),
+        commands.registerCommand('lean.command.version',
+        () => server.leanprojectcommand('lean -v')),
+        commands.registerCommand('leanproject.add-mathlib',
+        () => server.leanprojectcommand('leanproject add-mathlib')),
+        commands.registerCommand('leanproject.check',
+        () => server.leanprojectcommand('leanproject check')),
+        commands.registerCommand('leanproject.build',
+        () => server.leanprojectcommand('leanproject build')),
+        commands.registerCommand('leanproject.delete-zombies',
+        () => server.leanprojectcommand('leanproject delete-zombies')),
+        commands.registerCommand('leanproject.get',
+        () => server.leanprojectcommand('echo Navigate to the preferred directory and run "leanproject get"')),
+        commands.registerCommand('leanproject.get-cache',
+        () => server.leanprojectcommand('leanproject get-cache')),
+        commands.registerCommand('leanproject.get-mathlib-cache',
+        () => server.leanprojectcommand('leanproject get-mathlib-cache')),
+        commands.registerCommand('leanproject.global-install',
+        () => server.leanprojectcommand('leanproject global-install')),
+        commands.registerCommand('leanproject.global-upgrade',
+        () => server.leanprojectcommand('leanproject global-upgrade')),
+        commands.registerCommand('leanproject.hooks',
+        () => server.leanprojectcommand('leanproject hooks')),
+        commands.registerCommand('leanproject.import-graph',
+        () => server.leanprojectcommand('leanproject import-graph')),
+        commands.registerCommand('leanproject.mk-all',
+        () => server.leanprojectcommand('leanproject mk-all')),
+        commands.registerCommand('leanproject.mk-cache',
+        () => server.leanprojectcommand('leanproject mk-cache')),
+        commands.registerCommand('leanproject.new',
+        () => server.leanprojectcommand('echo Navigate to the preferred directory and run "leanproject new" [projectname]')),
+        commands.registerCommand('leanproject.pr',
+        () => server.leanprojectcommand('echo Navigate to the preferred directory and run "leanproject pr" [branch_name]')),
+        commands.registerCommand('leanproject.rebase',
+        () => server.leanprojectcommand('leanproject rebase')),
+        commands.registerCommand('leanproject.set-url',
+        () => server.leanprojectcommand('leanproject set-url')),
+        commands.registerCommand('leanproject.upgrade-mathlib',
+        () => server.leanprojectcommand('leanproject upgrade-mathlib')),
+        commands.registerCommand('lean.elan.help',
+        () => server.leanprojectcommand('elan')),
+        commands.registerCommand('lean.elan.show',
+        () => server.leanprojectcommand('elan show')),
+        commands.registerCommand('lean.elan.default',
+        () => server.leanprojectcommand('elan default')),
+        commands.registerCommand('lean.elan.toolchain',
+        () => server.leanprojectcommand('elan toolchain')),
+        commands.registerCommand('lean.elan.override',
+        () => server.leanprojectcommand('elan override')),
+        commands.registerCommand('lean.elan.run',
+        () => server.leanprojectcommand('elan run')),
+        commands.registerCommand('lean.elan.which',
+        () => server.leanprojectcommand('elan which')),
+        commands.registerCommand('lean.elan.completions',
+        () => server.leanprojectcommand('elan completions')),
     );
 
     context.subscriptions.push(new LeanDiagnosticsProvider(server));
