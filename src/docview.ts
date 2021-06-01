@@ -142,7 +142,7 @@ export class DocViewProvider implements Disposable {
         const {webview} = this.getWebview();
 
         const url = this.currentURL;
-        let $: CheerioStatic;
+        let $: cheerio.Root;
         try {
             $ = cheerio.load(await this.fetch(url));
         } catch (e) {
