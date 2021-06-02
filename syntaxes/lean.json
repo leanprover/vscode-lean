@@ -130,7 +130,8 @@
         { "name": "string.quoted.single.lean", "match": "'[^\\\\']'" },
         { "name": "string.quoted.single.lean", "match": "'(\\\\(x..|u....|.))'",
           "captures": {"1": {"name": "constant.character.escape.lean"}} },
-        {"match": "`+[^\\[(]\\S+", "name": "entity.name.lean"},
+        { "match": "`+(?![λΠΣ])[_a-zA-Zα-ωΑ-Ωϊ-ϻἀ-῾℀-⅏𝒜-𝖟](?:(?![λΠΣ])[_a-zA-Zα-ωΑ-Ωϊ-ϻἀ-῾℀-⅏𝒜-𝖟0-9'ⁿ-₉ₐ-ₜᵢ-ᵪ])*",
+          "name": "entity.name.lean" },
         { "match": "\\b([0-9]+|0([xX][0-9a-fA-F]+))\\b", "name": "constant.numeric.lean" },
 
         {
