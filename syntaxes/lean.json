@@ -21,14 +21,14 @@
         {"match": ","},
         {"include": "#binders"},
         {
-          "begin": ":(?!=)", "end": "(?=\\bwith\\b|\\bextends\\b|:=|\\|)",
+          "begin": ":(?!=)", "end": "(?=\\bwith\\b|\\bextends\\b|:=|\\||\\.)",
           "contentName": "meta.type.lean",
           "patterns" : [
             {"include": "#expressions"}
           ]
         }
       ],
-      "end": "(?=\\bwith\\b|\\bextends\\b|:=|\\|)",
+      "end": "(?=\\bwith\\b|\\bextends\\b|:=|\\||\\.)",
       "name": "meta.definitioncommand.lean"
     },
     {
@@ -43,14 +43,14 @@
         {"match": ","},
         {"include": "#binders"},
         {
-          "begin": ":(?!=)", "end": "(?=:=|\\|)",
+          "begin": ":(?!=)", "end": "(?=:=|\\||\\.)",
           "contentName": "meta.type.lean",
           "patterns" : [
             {"include": "#expressions"}
           ]
         }
       ],
-      "end": "(?=:=|\\|)",
+      "end": "(?=:=|\\||\\.)",
       "name": "meta.definitioncommand.lean"
     },
     {
