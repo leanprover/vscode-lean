@@ -135,7 +135,7 @@
         { "match": "\\b([0-9]+|0([xX][0-9a-fA-F]+))\\b", "name": "constant.numeric.lean" },
 
         {
-          "begin": "\\b(?<!\\.)(fun|forall|assume|exists|λ)(?!(?![λΠΣ])[_a-zA-Zα-ωΑ-Ωϊ-ϻἀ-῾℀-⅏𝒜-𝖟0-9'ⁿ-₉ₐ-ₜᵢ-ᵪ])", "end": ",|=>",
+          "begin": "\\b(?<!\\.)(fun|forall|assume|exists|λ)(?!\\.(?![λΠΣ])[_a-zA-Zα-ωΑ-Ωϊ-ϻἀ-῾℀-⅏𝒜-𝖟0-9'ⁿ-₉ₐ-ₜᵢ-ᵪ])", "end": ",|=>",
           "beginCaptures": {"0": {"name": "keyword.other.lean"}},
           "comment": "Binders to show in blue.",
           "patterns": [
