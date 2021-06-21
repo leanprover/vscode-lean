@@ -148,7 +148,10 @@
           "beginCaptures": {"0": {"name": "keyword.other.lean"}},
           "comment": "Binders with pattern matching to show in blue.",
           "patterns": [
-            { "begin": "⟨", "end": "⟩", "comment": "Do not attempt to parse within pattern matches for now." },
+            { "begin": "⟨", "end": "⟩", "comment": "Do not attempt to parse parameters within pattern matches for now.",
+              "patterns": [
+                { "include": "#expressions" }
+              ] },
             { "include": "#comments" },
             { "include": "#abbreviatedBinders" }
           ]
