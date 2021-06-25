@@ -135,10 +135,23 @@
         { "match": "\\b([0-9]+|0([xX][0-9a-fA-F]+))\\b", "name": "constant.numeric.lean" },
 
         {
-          "begin": "\\b(?<!\\.)(fun|forall|assume|exists|λ)(?!(?![λΠΣ])[_a-zA-Zα-ωΑ-Ωϊ-ϻἀ-῾℀-⅏𝒜-𝖟0-9'ⁿ-₉ₐ-ₜᵢ-ᵪ])", "end": ",|=>",
+          "begin": "\\b(?<!\\.)(forall|exists)(?!\\.?(?![λΠΣ])[_a-zA-Zα-ωΑ-Ωϊ-ϻἀ-῾℀-⅏𝒜-𝖟0-9'ⁿ-₉ₐ-ₜᵢ-ᵪ])", "end": ",|=>",
           "beginCaptures": {"0": {"name": "keyword.other.lean"}},
           "comment": "Binders to show in blue.",
           "patterns": [
+            { "include": "#comments" },
+            { "include": "#abbreviatedBinders" }
+          ]
+        },
+        {
+          "begin": "\\b(?<!\\.)((fun|assume)(?!\\.?(?![λΠΣ])[_a-zA-Zα-ωΑ-Ωϊ-ϻἀ-῾℀-⅏𝒜-𝖟0-9'ⁿ-₉ₐ-ₜᵢ-ᵪ])|λ)", "end": ",|=>",
+          "beginCaptures": {"0": {"name": "keyword.other.lean"}},
+          "comment": "Binders with pattern matching to show in blue.",
+          "patterns": [
+            { "begin": "⟨", "end": "⟩", "comment": "Do not attempt to parse parameters within pattern matches for now.",
+              "patterns": [
+                { "include": "#expressions" }
+              ] },
             { "include": "#comments" },
             { "include": "#abbreviatedBinders" }
           ]
