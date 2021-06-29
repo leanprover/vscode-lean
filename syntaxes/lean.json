@@ -18,17 +18,9 @@
       "patterns": [
         {"include": "#comments"},
         {"include": "#definitionName"},
-        {"match": ","},
-        {"include": "#binders"},
-        {
-          "begin": ":(?!=)", "end": "(?=\\bwith\\b|\\bextends\\b|:=|\\||\\.)",
-          "contentName": "meta.type.lean",
-          "patterns" : [
-            {"include": "#expressions"}
-          ]
-        }
+        {"match": ","}
       ],
-      "end": "(?=\\bwith\\b|\\bextends\\b|:=|\\||\\.)",
+      "end": "(?=\\bwith\\b|\\bextends\\b|:|\\||\\.|\\(|\\[|\\{|⦃)",
       "name": "meta.definitioncommand.lean"
     },
     {
@@ -40,17 +32,9 @@
       "patterns": [
         {"include": "#comments"},
         {"include": "#definitionName"},
-        {"match": ","},
-        {"include": "#binders"},
-        {
-          "begin": ":(?!=)", "end": "(?=:=|\\||\\.)",
-          "contentName": "meta.type.lean",
-          "patterns" : [
-            {"include": "#expressions"}
-          ]
-        }
+        {"match": ","}
       ],
-      "end": "(?=:=|\\||\\.)",
+      "end": "(?=:|\\||\\.|\\(|\\[|\\{|⦃)",
       "name": "meta.definitioncommand.lean"
     },
     {
@@ -62,17 +46,9 @@
       "patterns": [
         {"include": "#comments"},
         {"include": "#definitionName"},
-        {"match": ","},
-        {"include": "#binders"},
-        {
-          "begin": ":(?!=)", "end": "$",
-          "contentName": "meta.type.lean",
-          "patterns" : [
-            {"include": "#expressions"}
-          ]
-        }
+        {"match": ","}
       ],
-      "end": "$",
+      "end": "($|(?=:|\\||\\.|\\(|\\[|\\{|⦃))",
       "name": "meta.definitioncommand.lean"
     },
 
@@ -98,14 +74,8 @@
       "match": "\\b(?<!\\.)(import|export|prelude|theory|definition|def|abbreviation|instance|renaming|hiding|exposing|constant|lemma|theorem|example|open|axiom|inductive|coinductive|with|structure|universe|universes|alias|precedence|reserve|postfix|prefix|infix|infixl|infixr|notation|namespace|section|local|set_option|extends|include|omit|class|classes|instances|raw|run_cmd|restate_axiom)(?!\\.)\\b",
       "name": "keyword.other.lean"
     },
-    { "begin": "\\b(?<!\\.)(variable|variables|parameter|parameters|constants)(?!\\.)\\b",
-      "end": "(?!$|[\\s\\n]|\\(|\\[|⦃|\\{|--|/-)",
-      "beginCaptures": {"1": {"name": "keyword.other.lean"}},
-      "comment": "While we could use #abbreviatedBinders here, it's impossible to know whether `variables x y` is legal without knowing if `x` and `y` are keywords.",
-      "patterns": [
-        {"include": "#comments"},
-        {"include": "#binders"}
-      ]
+    { "match": "\\b(?<!\\.)(variable|variables|parameter|parameters|constants)(?!\\.)\\b",
+      "name": "keyword.other.lean"
     },
     { "include": "#expressions" }
   ],
@@ -133,37 +103,6 @@
         { "match": "`+(?![λΠΣ])[_a-zA-Zα-ωΑ-Ωϊ-ϻἀ-῾℀-⅏𝒜-𝖟](?:(?![λΠΣ])[_a-zA-Zα-ωΑ-Ωϊ-ϻἀ-῾℀-⅏𝒜-𝖟0-9'ⁿ-₉ₐ-ₜᵢ-ᵪ])*",
           "name": "entity.name.lean" },
         { "match": "\\b([0-9]+|0([xX][0-9a-fA-F]+))\\b", "name": "constant.numeric.lean" },
-
-        {
-          "begin": "\\b(?<!\\.)(forall|exists)(?!\\.?(?![λΠΣ])[_a-zA-Zα-ωΑ-Ωϊ-ϻἀ-῾℀-⅏𝒜-𝖟0-9'ⁿ-₉ₐ-ₜᵢ-ᵪ])", "end": ",|=>",
-          "beginCaptures": {"0": {"name": "keyword.other.lean"}},
-          "comment": "Binders to show in blue.",
-          "patterns": [
-            { "include": "#comments" },
-            { "include": "#abbreviatedBinders" }
-          ]
-        },
-        {
-          "begin": "\\b(?<!\\.)((fun|assume)(?!\\.?(?![λΠΣ])[_a-zA-Zα-ωΑ-Ωϊ-ϻἀ-῾℀-⅏𝒜-𝖟0-9'ⁿ-₉ₐ-ₜᵢ-ᵪ])|λ)", "end": ",|=>",
-          "beginCaptures": {"0": {"name": "keyword.other.lean"}},
-          "comment": "Binders with pattern matching to show in blue.",
-          "patterns": [
-            { "begin": "⟨", "end": "⟩", "comment": "Do not attempt to parse parameters within pattern matches for now.",
-              "patterns": [
-                { "include": "#expressions" }
-              ] },
-            { "include": "#comments" },
-            { "include": "#abbreviatedBinders" }
-          ]
-        },
-        {
-          "begin": "(Π|∀|∃|∃!|Σ)", "end": ",",
-          "comment": "Note that we restrict ourselves to binders from core lean.",
-          "patterns": [
-            { "include": "#comments" },
-            { "include": "#abbreviatedBinders" }
-          ]
-        },
         {
           "match": "\\b(?<!\\.)(calc|have|this|match|do|suffices|show|by|in|at|let|from|obtain|haveI)(?!\\.)\\b",
           "name": "keyword.other.lean"
@@ -250,95 +189,6 @@
         { "match": "(?![λΠΣ])[_a-zA-Zα-ωΑ-Ωϊ-ϻἀ-῾℀-⅏𝒜-𝖟](?:(?![λΠΣ])[_a-zA-Zα-ωΑ-Ωϊ-ϻἀ-῾℀-⅏𝒜-𝖟0-9'ⁿ-₉ₐ-ₜᵢ-ᵪ])*",
           "name": "variable.parameter.lean"},
         { "begin": "«", "end": "»", "contentName": "variable.parameter.lean"}
-      ]
-    },
-    "binders": {
-      "comment": "This defined patterns for matching binders surrounded by (), {}, [], and ⦃⦄.",
-      "patterns": [
-        {
-          "begin": "\\(", "end": "\\)",
-          "name": "meta.binder.explicit",
-          "beginCaptures": {"0": {"name": "punctuation.definition.binder.explicit.begin.lean"}},
-          "endCaptures": {"0": {"name": "punctuation.definition.binder.explicit.end.lean"}},
-          "patterns" : [
-            { "begin": ":", "end": "(?=\\))",
-              "beginCaptures": {"0": {"name": "punctuation.separator.type.lean"}},
-              "contentName": "meta.type.lean",
-              "patterns" : [
-                {"include": "#expressions"}
-              ]
-            },
-            { "include": "#binderName" }
-          ]
-        },
-        {
-          "begin": "\\{", "end": "\\}",
-          "name": "meta.binder.implicit",
-          "beginCaptures": {"0": {"name": "punctuation.definition.binder.implicit.begin.lean"}},
-          "endCaptures": {"0": {"name": "punctuation.definition.binder.implicit.end.lean"}},
-          "patterns" : [
-            { "begin": ":", "end": "(?=\\})",
-              "beginCaptures": {"0": {"name": "punctuation.separator.type.lean"}},
-              "contentName": "meta.type.lean",
-              "patterns" : [
-                {"include": "#expressions"}
-              ]
-            },
-            { "include": "#binderName" }
-          ]
-        },
-        {
-          "begin": "⦃|\\{\\{", "end": "⦄|\\}\\}",
-          "name": "meta.binder.semiimplicit",
-          "beginCaptures": {"0": {"name": "punctuation.definition.binder.semiimplicit.begin.lean"}},
-          "endCaptures": {"0": {"name": "punctuation.definition.binder.semiimplicit.end.lean"}},
-          "patterns" : [
-            { "begin": ":", "end": "(?=⦄|\\}\\})",
-              "beginCaptures": {"0": {"name": "punctuation.separator.type.lean"}},
-              "contentName": "meta.type.lean",
-              "patterns" : [
-                {"include": "#expressions"}
-              ]
-            },
-            { "include": "#binderName" }
-          ]
-        },
-        {
-          "begin": "\\[", "end": "\\]",
-          "name": "meta.binder.typeclass",
-          "beginCaptures": {"0": {"name": "punctuation.definition.binder.typeclass.begin.lean"}},
-          "endCaptures": {"0": {"name": "punctuation.definition.binder.typeclass.end.lean"}},
-          "patterns" : [
-            { "begin": "(?<=\\[)(?=[^\\]]*:)", "end": ":",
-              "endCaptures": {"0": {"name": "punctuation.separator.type.lean"}},
-              "comment": "This fails to match the instance name on pathological cases like `[where«is the ]» : oops]`, but no one really writes that anyway, right?",
-              "patterns" : [
-                {"include": "#binderName"}
-              ]
-            },
-            {
-              "begin": "", "end": "(?!\\G)",
-              "contentName": "meta.type.lean",
-              "patterns": [
-                { "include": "#expressions" }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    "abbreviatedBinders": {
-      "comment": "This extends `#binders` with parenthesis-free binders.",
-      "patterns" : [
-        { "include": "#binders"},
-        { "include": "#binderName" },
-        { "begin": ":", "end": "(?=\\,)",
-          "beginCaptures": {"0": {"name": "punctuation.separator.type.lean"}},
-          "contentName": "meta.type.lean",
-          "patterns" : [
-            {"include": "#expressions"}
-          ]
-        }
       ]
     }
   }

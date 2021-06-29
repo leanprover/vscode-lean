@@ -416,7 +416,7 @@
 	"scripts": {
 		"vscode:prepublish": "webpack --env production",
 		"compile": "webpack --env development",
-		"watch": "webpack --env development --watch --info-verbosity verbose",
+		"watch": "webpack --env development --watch",
 		"lint": "eslint -c ./.eslintrc.js ./src/**/*.ts ./infoview/**/*.tsx",
 		"package": "vsce package"
 	},
