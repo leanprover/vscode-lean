@@ -108,6 +108,10 @@
           "name": "keyword.other.lean"
         },
         {
+          "match": "\\b(?<!\\.)λ",
+          "name": "keyword.other.lean"
+        },
+        {
           "match": "\\b(?<!\\.)(begin|end|using)(?!\\.)\\b",
           "name": "keyword.other.lean"
         },
