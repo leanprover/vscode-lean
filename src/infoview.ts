@@ -28,8 +28,10 @@ export class InfoProvider implements Disposable {
 
     private hoverDecorationType: TextEditorDecorationType;
 
-    constructor(private server: Server, private leanDocs: DocumentSelector, private context: ExtensionContext, private staticServer?: StaticServer) {
+    // Callbacks when a new tactic state is received
+    private tacticStateHandlers: { [id: string] : (string) => void; } = {};
 
+    constructor(private server: Server, private leanDocs: DocumentSelector, private context: ExtensionContext, private staticServer?: StaticServer) {
         this.statusBarItem = window.createStatusBarItem(StatusBarAlignment.Right, 1000);
 
         this.hoverDecorationType = window.createTextEditorDecorationType({
@@ -108,6 +110,10 @@ export class InfoProvider implements Disposable {
         }
     }
 
+    onNewTacticState(handler_name: string, handler: (string) => void) {
+        this.tacticStateHandlers[handler_name] = handler;
+    }
+
     private makeProxyConnection() {
         if (this.proxyConnection) {
             this.proxyConnection.dispose();
@@ -120,12 +126,17 @@ export class InfoProvider implements Disposable {
                     payload: JSON.stringify(e)
                 })
             ),
-            this.proxyConnection.jsonMessage.on(e =>
+            this.proxyConnection.jsonMessage.on(e => {
+                if ('record' in e && 'state' in e.record){
+                    for (const [handlerName, handler] of Object.entries(this.tacticStateHandlers)) {
+                        handler(e.record.state);
+                    }
+                }
                 this.postMessage({
                     command: 'server_event',
                     payload: JSON.stringify(e)
-                })
-            )
+                });
+            })
         );
 
     }
