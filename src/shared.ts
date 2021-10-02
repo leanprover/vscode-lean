@@ -110,4 +110,4 @@ export type ToInfoviewMessage =
     | { command: 'all_messages'; messages: Message[]}
     | { command: 'toggle_all_messages' }
     | SyncPinMessage
-    | { command: 'pause' | 'continue' | 'toggle_updating' | 'copy_to_comment' | 'toggle_pin' | 'restart'}
+    | { command: 'pause' | 'continue' | 'toggle_updating' | 'copy_to_comment' | 'insert_first_goal' | 'toggle_pin' | 'restart'}

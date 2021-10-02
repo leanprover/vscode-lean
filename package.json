@@ -226,6 +226,12 @@
 				}
 			},
 			{
+				"command": "lean.infoView.insertFirstGoal",
+				"category": "Lean",
+				"title": "Info View: Insert First Goal",
+				"description": "Insert the first goal in the currently active tactic state widget at the cursor position."
+			},
+			{
 				"command": "lean.infoView.toggleStickyPosition",
 				"category": "Lean",
 				"title": "Info View: Toggle Pin",
