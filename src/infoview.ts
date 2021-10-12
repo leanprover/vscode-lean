@@ -29,7 +29,7 @@ export class InfoProvider implements Disposable {
     private hoverDecorationType: TextEditorDecorationType;
 
     // Callbacks when a new tactic state is received
-    private tacticStateHandlers: { [id: string] : (string) => void; } = {};
+    private tacticStateHandlers: { [id: string] : (state: string, widget: object) => void; } = {};
 
     constructor(private server: Server, private leanDocs: DocumentSelector, private context: ExtensionContext, private staticServer?: StaticServer) {
         this.statusBarItem = window.createStatusBarItem(StatusBarAlignment.Right, 1000);
@@ -110,7 +110,7 @@ export class InfoProvider implements Disposable {
         }
     }
 
-    onNewTacticState(handler_name: string, handler: (string) => void) {
+    onNewTacticState(handler_name: string, handler: (state: string, widget: object) => void): void {
         this.tacticStateHandlers[handler_name] = handler;
     }
 
@@ -127,9 +127,9 @@ export class InfoProvider implements Disposable {
                 })
             ),
             this.proxyConnection.jsonMessage.on(e => {
-                if ('record' in e && 'state' in e.record){
+                if ('record' in e && 'state' in e.record && 'widget' in e.record){
                     for (const [handlerName, handler] of Object.entries(this.tacticStateHandlers)) {
-                        handler(e.record.state);
+                        handler(e.record.state, e.record.widget);
                     }
                 }
                 this.postMessage({
