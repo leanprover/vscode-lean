@@ -396,6 +396,7 @@
 		},
 		"configurationDefaults": {
 			"[lean]": {
+                                "editor.unicodeHighlight.ambiguousCharacters": false,
 				"editor.tabSize": 2
 			}
 		}
