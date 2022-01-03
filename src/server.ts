@@ -67,12 +67,11 @@ export class Server extends leanclient.Server {
             }
 
             this.workingDirectory = workspace.rootPath;
-            this.options = config.get('extraOptions') || [];
-
-            this.options.push('-M');
-            this.options.push('' + config.get('memoryLimit'));
-            this.options.push('-T');
-            this.options.push('' + config.get('timeLimit'));
+            this.options = [
+                ... config.get<string[]>('extraOptions') ?? [],
+                '-M', '' + config.get('memoryLimit'),
+                '-T', '' + config.get('timeLimit'),
+            ];
 
             const {extensionPath} = extensions.getExtension('jroesch.lean');
             const executablePath = this.executablePath.replace('%extensionPath%', extensionPath + '/');
