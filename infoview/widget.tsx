@@ -109,13 +109,17 @@ export const Widget = React.memo(({ widget, fileName }: WidgetProps) => {
     const [html, setHtml] = React.useState<WidgetComponent>();
     React.useEffect(() => {
         async function loadHtml() {
-            setHtml((await global_server.send({
-                command: 'get_widget',
-                line: widget.line,
-                column: widget.column,
-                id: widget.id,
-                file_name: fileName,
-            })).widget.html);
+            try {
+                setHtml((await global_server.send({
+                    command: 'get_widget',
+                    line: widget.line,
+                    column: widget.column,
+                    id: widget.id,
+                    file_name: fileName,
+                })).widget.html);
+            } catch (e) {
+                setHtml({c: ['' + e]})
+            }
         }
         if (widget && !widget.html) {
             void loadHtml();
