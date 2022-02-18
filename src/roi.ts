@@ -127,7 +127,13 @@ export class RoiManager implements Disposable {
 
     async send(): Promise<void> {
         const roi = await this.compute();
-        await this.server.roi(this.modeString(), roi);
+        try {
+            if (this.server.alive()){
+                await this.server.roi(this.modeString(), roi);
+            }
+        } catch (e) {
+            console.log('ignoring error from server.rio: ' + e);
+        }
     }
 
     async check(mode: RoiMode): Promise<void> {

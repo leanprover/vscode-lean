@@ -32,7 +32,13 @@ export class LeanSyncService implements Disposable {
             this.didAutoStartServer = true;
             this.server.connect();
         }
-        await this.server.sync(doc.fileName, doc.getText());
+        try {
+            if (this.server.alive()){
+                await this.server.sync(doc.fileName, doc.getText());
+            }
+        } catch (e){
+            console.log('ignoring sync error :' + e);
+        }
     }
 
     dispose(): void {

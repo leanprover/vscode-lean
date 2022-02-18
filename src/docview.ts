@@ -13,6 +13,7 @@ export function mkCommandUri(commandName: string, ...args: any[]): string {
 }
 
 function findProjectDocumentation(): string | null {
+    if (!workspace.rootPath) return null;
     const html = join(workspace.rootPath, 'html', 'index.html');
     return fs.existsSync(html) ? html : null;
 }
@@ -34,6 +35,7 @@ export class DocViewProvider implements Disposable {
     }
 
     private async offerToOpenProjectDocumentation() {
+        if (!workspace.rootPath) return
         if (!fs.existsSync(join(workspace.rootPath, 'leanpkg.toml'))) return;
         const projDoc = findProjectDocumentation();
         if (!projDoc) return;
@@ -59,13 +61,14 @@ export class DocViewProvider implements Disposable {
                 enableCommandUris: true,
                 retainContextWhenHidden: true,
             };
+            let closed = false;
             this.webview = window.createWebviewPanel('lean', 'Lean Documentation',
                 { viewColumn: 3, preserveFocus: true }, options);
-            this.webview.onDidDispose(() => this.webview = null);
+            this.webview.onDidDispose(() => { closed = true; this.webview = null; });
 
             let first = true;
             this.webview.onDidChangeViewState(async () => {
-                if (first) {
+                if (first && !closed) {
                     first = false;
                     // super hacky way to show both infoview and docview in a split
                     await commands.executeCommand('workbench.action.focusRightGroup');

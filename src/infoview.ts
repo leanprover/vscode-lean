@@ -132,6 +132,7 @@ export class InfoProvider implements Disposable {
 
     dispose(): void {
         this.proxyConnection.dispose();
+        this.proxyConnection = undefined;
         for (const s of this.subscriptions) { s.dispose(); }
     }
 
@@ -164,6 +165,7 @@ export class InfoProvider implements Disposable {
         if (this.webviewPanel) {
             this.webviewPanel.reveal(column, true);
         } else {
+            let closed = false;
             this.webviewPanel = window.createWebviewPanel('lean', 'Lean Infoview',
                 { viewColumn: column, preserveFocus: true },
                 {
@@ -173,8 +175,10 @@ export class InfoProvider implements Disposable {
                     enableCommandUris: true,
                 });
             this.webviewPanel.webview.html = this.initialHtml();
-            this.webviewPanel.onDidDispose(() => this.webviewPanel = null);
-            this.webviewPanel.webview.onDidReceiveMessage((message) => this.handleMessage(message), undefined, this.subscriptions);
+            this.webviewPanel.onDidDispose(() => { closed = true; this.webviewPanel = null });
+            this.webviewPanel.webview.onDidReceiveMessage((message) => {
+                if (!closed) void this.handleMessage(message);
+            }, undefined, this.subscriptions);
         }
         if (loc !== null) { await this.postMessage({ command: 'position', loc }); }
         await this.sendConfig();
@@ -212,7 +216,13 @@ export class InfoProvider implements Disposable {
         }
     }
     private handleServerRequest(message: ServerRequestMessage) {
-        this.proxyConnection.send(JSON.parse(message.payload));
+        if (this.proxyConnection && this.proxyConnection.alive && this.server.alive()) {
+            try {
+                this.proxyConnection.send(JSON.parse(message.payload));
+            } catch (e) {
+                console.log('ignoring send error: ' + e);
+            }
+        }
     }
     private async handleInsertText(message: InsertTextMessage) {
         let editor: TextEditor = null;

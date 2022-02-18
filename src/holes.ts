@@ -29,28 +29,33 @@ export class LeanHoles implements Disposable, CodeActionProvider {
     }
 
     private async refresh() {
-        const ress = await Promise.all(window.visibleTextEditors
-            .filter((editor) => languages.match(this.leanDocs, editor.document))
-            .map((editor) => this.server.allHoleCommands(editor.document.fileName)));
+        if (!this.server.alive()) { return; }
+        try {
+            const ress = await Promise.all(window.visibleTextEditors
+                .filter((editor) => languages.match(this.leanDocs, editor.document))
+                .map((editor) => this.server.allHoleCommands(editor.document.fileName)));
 
-        this.holes = [];
-        for (const res of ress) {
-            [].push.apply(this.holes, res.holes);
-        }
+            this.holes = [];
+            for (const res of ress) {
+                [].push.apply(this.holes, res.holes);
+            }
 
-        const holesPerFile = new Map<string, HoleCommands[]>();
-        for (const hole of this.holes) {
-            if (!holesPerFile.get(hole.file)) { holesPerFile.set(hole.file, []); }
-            holesPerFile.get(hole.file).push(hole);
-        }
+            const holesPerFile = new Map<string, HoleCommands[]>();
+            for (const hole of this.holes) {
+                if (!holesPerFile.get(hole.file)) { holesPerFile.set(hole.file, []); }
+                holesPerFile.get(hole.file).push(hole);
+            }
 
-        this.collection.clear();
-        for (const file of holesPerFile.keys()) {
-            this.collection.set(Uri.file(file),
-                holesPerFile.get(file).map((hole) =>
-                    new Diagnostic(mkRange(hole),
-                        'Hole: ' + hole.results.map((a) => a.name).join('/'),
-                        DiagnosticSeverity.Hint)));
+            this.collection.clear();
+            for (const file of holesPerFile.keys()) {
+                this.collection.set(Uri.file(file),
+                    holesPerFile.get(file).map((hole) =>
+                        new Diagnostic(mkRange(hole),
+                            'Hole: ' + hole.results.map((a) => a.name).join('/'),
+                            DiagnosticSeverity.Hint)));
+            }
+        } catch (e) {
+            console.log('ignoring error in refresh: ' + e);
         }
     }
 
