@@ -47,6 +47,15 @@ export class LeanDiagnosticsProvider implements Disposable {
         this.subscriptions.push(server.restarted.on(() => this.updateDiagnostics([])));
     }
 
+    // The server reports positions as unicode codepoints, but VSCode's API (and the javascript
+    // runtime) measures things in UTF16 code _units_. It turns out that `...str` in javascript
+    // splits a string into its codepoints, which is precisely what we want to count.
+    private correctCodepointPosition(t : TextDocument, line: number, col: number) : Position {
+        let lineStr = t.lineAt(new Position(line, 0)).text;
+        let fixedCol = [...lineStr].slice(0, col).join("").length;
+        return new Position(line, fixedCol);
+    }
+
     private updateDiagnostics(messages: Message[]) {
         const diagnosticMap = new Map<string, Diagnostic[]>();
         const docMap = new Map<string, TextDocument>();
@@ -57,7 +66,6 @@ export class LeanDiagnosticsProvider implements Disposable {
 
         for (const message of messages) {
             const line = Math.max(message.pos_line - 1, 0);
-            const pos = new Position(line, message.pos_col);
             // Assign the diagnostic to the entire word following the info message
             // so that code actions can be activated more easily
             let msgDoc = docMap.get(message.file_name);
@@ -65,6 +73,8 @@ export class LeanDiagnosticsProvider implements Disposable {
                 msgDoc = workspace.textDocuments.find((doc) => doc.fileName === message.file_name);
                 docMap.set(message.file_name, msgDoc);
             }
+            const pos = this.correctCodepointPosition(msgDoc, line, message.pos_col);
+
             const range = msgDoc.getWordRangeAtPosition(pos) || new Range(pos, pos);
             let diagnostics = diagnosticMap.get(message.file_name);
             if (!diagnostics) { diagnosticMap.set(message.file_name, diagnostics = []); }
