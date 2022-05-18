@@ -8,20 +8,20 @@ export class CodePointPosition {
         /**
          * The zero-based line value.
          */
-        readonly line: number, 
+        readonly line: number,
         /**
          * The zero-based character value, in unicode codepoints (not javascript UTF16 codewords!)
          */
         readonly character: number) {}
 
     toPosition (t : TextDocument) : Position {
-        let lineStr = t.lineAt(new Position(this.line, 0)).text;
-        let fixedCol = [...lineStr].slice(0, this.character).join("").length;
+        const lineStr = t.lineAt(new Position(this.line, 0)).text;
+        const fixedCol = [...lineStr].slice(0, this.character).join('').length;
         return new Position(this.line, fixedCol);
     }
 
-    public static ofPosition (t: TextDocument, p: Position) : CodePointPosition {
-        let lineStr = t.lineAt(p).text.slice(0, p.character);
+    static ofPosition (t: TextDocument, p: Position) : CodePointPosition {
+        const lineStr = t.lineAt(p).text.slice(0, p.character);
         return new CodePointPosition(p.line, [...lineStr].length);
     }
 }
