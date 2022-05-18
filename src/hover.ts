@@ -1,5 +1,6 @@
 import { Hover, HoverProvider, MarkdownString, Position, Range, TextDocument } from 'vscode';
 import { Server } from './server';
+import { CodePointPosition } from './utils/utf16Position';
 
 export class LeanHoverProvider implements HoverProvider {
     server: Server;
@@ -9,7 +10,8 @@ export class LeanHoverProvider implements HoverProvider {
     }
 
     async provideHover(document: TextDocument, position: Position): Promise<Hover> {
-        const response = await this.server.info(document.fileName, position.line + 1, position.character);
+        const codePointPosition = CodePointPosition.ofPosition(document, position);
+        const response = await this.server.info(document.fileName, codePointPosition.line + 1, codePointPosition.character);
         if (response.record) {
             const contents: MarkdownString[] = [];
             const name = response.record['full-id'] || response.record.text;
@@ -30,8 +32,8 @@ export class LeanHoverProvider implements HoverProvider {
                 contents.push(new MarkdownString()
                     .appendCodeblock(response.record.state, 'lean'));
             }
-            const pos = new Position(position.line - 1, position.character);
-            return new Hover(contents, new Range(pos, pos));
+            // const pos = new Position(position.line - 1, position.character);
+            return new Hover(contents, new Range(position, position));
         }
     }
 }
