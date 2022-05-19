@@ -294,7 +294,6 @@ export class InfoProvider implements Disposable {
     }
 
     private async revealEditorPosition(uri: Uri, line: number, column: number) {
-        const pos = new Position(line - 1, column);
         let editor = null;
         for (const e of window.visibleTextEditors) {
             if (e.document.uri.toString() === uri.toString()) {
@@ -307,6 +306,7 @@ export class InfoProvider implements Disposable {
             const td = await workspace.openTextDocument(uri);
             editor = await window.showTextDocument(td, c, false);
         }
+        const pos = new CodePointPosition(line - 1, column).toPosition(editor.document);
         editor.revealRange(new Range(pos, pos), TextEditorRevealType.InCenterIfOutsideViewport);
         editor.selection = new Selection(pos, pos);
         return;
@@ -318,9 +318,9 @@ export class InfoProvider implements Disposable {
         const endColumn = column;
         for (const editor of window.visibleTextEditors) {
             if (editor.document.uri.path === file_name) {
-                const pos = new Position(line - 1, column);
-                const endPos = new Position(endLine - 1, endColumn);
-                const range = new Range(pos, endPos);
+                const pos = new CodePointPosition(line - 1, column);
+                const endPos = new CodePointPosition(endLine - 1, endColumn);
+                const range = new Range(pos.toPosition(editor.document), endPos.toPosition(editor.document));
                 editor.setDecorations(this.hoverDecorationType, [range]);
             }
         }

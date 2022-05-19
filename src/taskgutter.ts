@@ -2,6 +2,7 @@ import { Diagnostic, DiagnosticCollection, DiagnosticSeverity, Disposable, Exten
     languages, OverviewRulerLane, Range, TextEditorDecorationType, Uri, window, workspace } from 'vscode';
 import { Server } from './server';
 import { ServerStatus } from './shared';
+import { CodePointPosition } from './utils/utf16Position';
 
 export class LeanTaskGutter implements Disposable {
     private decoration: TextEditorDecorationType;
@@ -30,8 +31,8 @@ export class LeanTaskGutter implements Disposable {
                 status.tasks.filter((t) => t.file_name === editor.document.fileName)
                     .map((task) => ({
                         range: new Range(
-                            task.pos_line - 1, task.pos_col,
-                            task.end_pos_line - 1, task.end_pos_col,
+                            new CodePointPosition(task.pos_line - 1, task.pos_col).toPosition(editor.document),
+                            new CodePointPosition(task.end_pos_line - 1, task.end_pos_col).toPosition(editor.document),
                         ),
                         hoverMessage: task.desc,
                     })));
@@ -56,16 +57,18 @@ export class LeanTaskMessages implements Disposable {
             this.updateMsgs(server.statusChanged.currentValue)));
     }
 
-    private updateMsgs(status: ServerStatus) {
+    private async updateMsgs(status: ServerStatus) {
         const diagsPerFile = new Map<string, Diagnostic[]>();
 
         if (workspace.getConfiguration('lean').get('progressMessages')) {
             for (const task of status.tasks) {
                 let diags = diagsPerFile.get(task.file_name);
                 if (!diags) { diagsPerFile.set(task.file_name, diags = []); }
+                const document = await workspace.openTextDocument(Uri.file(task.file_name));
                 diags.push(new Diagnostic(
-                    new Range(task.pos_line - 1, task.pos_col,
-                        task.end_pos_line - 1, task.end_pos_col),
+                    new Range(
+                        new CodePointPosition(task.pos_line - 1, task.pos_col).toPosition(document),
+                        new CodePointPosition(task.end_pos_line - 1, task.end_pos_col).toPosition(document)),
                     task.desc, DiagnosticSeverity.Information,
                 ));
             }

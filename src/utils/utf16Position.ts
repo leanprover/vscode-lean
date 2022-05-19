@@ -1,8 +1,12 @@
 import { Position, TextDocument } from 'vscode';
 
-// The server reports positions as unicode codepoints, but VSCode's API (and the javascript
-// runtime) measures things in UTF16 code _units_. It turns out that `...str` in javascript
-// splits a string into its codepoints, which is precisely what we want to count.
+/**
+ * The lean server reports positions as unicode codepoints, which matches what the VSCode editor
+ * shows to the user; but VSCode's API (and the javascript runtime) measures things in UTF16 code
+ * _units_ internally. This class converts between the two.
+ * 
+ * We impleemnt this using `...str` to split code units into codepoints.
+ */
 export class CodePointPosition {
     constructor(
         /**

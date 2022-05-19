@@ -32,7 +32,6 @@ export class LeanHoverProvider implements HoverProvider {
                 contents.push(new MarkdownString()
                     .appendCodeblock(response.record.state, 'lean'));
             }
-            // const pos = new Position(position.line - 1, position.character);
             return new Hover(contents, new Range(position, position));
         }
     }
