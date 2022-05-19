@@ -51,6 +51,7 @@ export class LeanTaskMessages implements Disposable {
 
     constructor(server: Server) {
         this.collection = languages.createDiagnosticCollection('lean-tasks');
+        // TODO: Is it ok that `uupdateMsgs` returns a promise?
         this.subscriptions.push(server.statusChanged.on(
             (status) => this.updateMsgs(status)));
         this.subscriptions.push(workspace.onDidChangeConfiguration(() =>

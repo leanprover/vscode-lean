@@ -4,8 +4,10 @@ import { Position, TextDocument } from 'vscode';
  * The lean server reports positions as unicode codepoints, which matches what the VSCode editor
  * shows to the user; but VSCode's API (and the javascript runtime) measures things in UTF16 code
  * _units_ internally. This class converts between the two.
- * 
- * We impleemnt this using `...str` to split code units into codepoints.
+ *
+ * We implement this using `...str` to split code units into codepoints.
+ *
+ * Note that this does not deal with the lean server starting its line numbers at 1 and not zero.
  */
 export class CodePointPosition {
     constructor(
