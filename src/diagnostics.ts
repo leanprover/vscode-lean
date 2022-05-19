@@ -2,6 +2,7 @@ import { Message, Severity } from 'lean-client-js-node';
 import { Diagnostic, DiagnosticCollection, DiagnosticSeverity,
     Disposable, languages, Position, Range, TextDocument, Uri, workspace } from 'vscode';
 import { Server } from './server';
+import { CodePointPosition } from './utils/utf16Position';
 
 function toSeverity(severity: Severity): DiagnosticSeverity {
     switch (severity) {
@@ -56,8 +57,6 @@ export class LeanDiagnosticsProvider implements Disposable {
         messages = truncateMessages(messages);
 
         for (const message of messages) {
-            const line = Math.max(message.pos_line - 1, 0);
-            const pos = new Position(line, message.pos_col);
             // Assign the diagnostic to the entire word following the info message
             // so that code actions can be activated more easily
             let msgDoc = docMap.get(message.file_name);
@@ -65,7 +64,15 @@ export class LeanDiagnosticsProvider implements Disposable {
                 msgDoc = workspace.textDocuments.find((doc) => doc.fileName === message.file_name);
                 docMap.set(message.file_name, msgDoc);
             }
-            const range = msgDoc.getWordRangeAtPosition(pos) || new Range(pos, pos);
+            const pos = new CodePointPosition(Math.max(message.pos_line - 1, 0), message.pos_col);
+            const endPos = message.end_pos_col !== undefined
+                ? new CodePointPosition(Math.max(message.end_pos_line - 1, 0), message.end_pos_col)
+                : undefined;
+            const utf16Pos = pos.toPosition(msgDoc);
+            const utf16EndPos = endPos?.toPosition(msgDoc);
+            const range = endPos
+                ? new Range(utf16Pos, utf16EndPos)
+                : msgDoc.getWordRangeAtPosition(utf16Pos) || new Range(utf16Pos, utf16Pos);
             let diagnostics = diagnosticMap.get(message.file_name);
             if (!diagnostics) { diagnosticMap.set(message.file_name, diagnostics = []); }
             const d = new Diagnostic(range, message.text,

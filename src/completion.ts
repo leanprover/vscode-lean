@@ -2,6 +2,7 @@ import { CompletionItem, CompletionItemKind, CompletionItemProvider,
     MarkdownString, Position, Range, TextDocument, workspace } from 'vscode';
 import { Server } from './server';
 import { isInputCompletion } from './util';
+import { CodePointPosition } from './utils/utf16Position';
 
 const keywords = [
     'theorem', 'lemma', 'axiom', 'axioms', 'variable', 'protected', 'private',
@@ -42,7 +43,8 @@ export class LeanCompletionItemProvider implements CompletionItemProvider {
             Promise<CompletionItem[]> {
         // TODO(gabriel): use LeanInputAbbreviator.active() instead
         if (!isInputCompletion(document, position)) {
-            const message = await this.server.complete(document.fileName, position.line + 1, position.character);
+            const codePointPosition = CodePointPosition.ofPosition(document, position);
+            const message = await this.server.complete(document.fileName, codePointPosition.line + 1, codePointPosition.character);
             const completions: CompletionItem[] = [];
             if (message.completions) {
                 for (const completion of message.completions) {

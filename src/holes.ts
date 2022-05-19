@@ -1,17 +1,20 @@
 import { HoleCommands, HoleResponse } from 'lean-client-js-core';
 import { CodeActionProvider, Command, commands, Diagnostic,
     DiagnosticCollection, DiagnosticSeverity, Disposable, DocumentSelector, languages,
-    Range, TextDocument, Uri, window } from 'vscode';
+    Range, TextDocument, TextEditor, Uri, window } from 'vscode';
 import { Server } from './server';
+import { CodePointPosition } from './utils/utf16Position';
 
 interface Pos { line: number; column: number }
 interface Ran { start: Pos; end: Pos }
-function mkRange(r: Ran): Range {
-    return new Range(r.start.line - 1, r.start.column, r.end.line - 1, r.end.column);
+function mkRange(doc: TextDocument, r: Ran): Range {
+    const startPos = new CodePointPosition(r.start.line - 1, r.start.column);
+    const endPos = new CodePointPosition(r.end.line - 1, r.end.column);
+    return new Range(startPos.toPosition(doc), endPos.toPosition(doc));
 }
 
 export class LeanHoles implements Disposable, CodeActionProvider {
-    private holes: HoleCommands[] = [];
+    private holes: [TextDocument, HoleCommands][] = [];
     private collection: DiagnosticCollection;
     private subscriptions: Disposable[] = [];
 
@@ -31,26 +34,30 @@ export class LeanHoles implements Disposable, CodeActionProvider {
     private async refresh() {
         if (!this.server.alive()) { return; }
         try {
-            const ress = await Promise.all(window.visibleTextEditors
-                .filter((editor) => languages.match(this.leanDocs, editor.document))
-                .map((editor) => this.server.allHoleCommands(editor.document.fileName)));
+            const leanEditor = window.visibleTextEditors .filter((editor) =>
+                languages.match(this.leanDocs, editor.document));
+            const ress = await Promise.all(leanEditor
+                .map((editor) =>  this.server.allHoleCommands(editor.document.fileName).then
+                    ((holes) : [TextDocument, any] => [editor.document, holes])));
 
             this.holes = [];
-            for (const res of ress) {
-                [].push.apply(this.holes, res.holes);
+            for (const [document, res] of ress) {
+                for (const hole of res.holes) {
+                    this.holes.push([document, hole]);
+                }
             }
 
-            const holesPerFile = new Map<string, HoleCommands[]>();
-            for (const hole of this.holes) {
+            const holesPerFile = new Map<string, [TextDocument, HoleCommands][]>();
+            for (const [document, hole] of this.holes) {
                 if (!holesPerFile.get(hole.file)) { holesPerFile.set(hole.file, []); }
-                holesPerFile.get(hole.file).push(hole);
+                holesPerFile.get(hole.file).push([document, hole]);
             }
 
             this.collection.clear();
             for (const file of holesPerFile.keys()) {
                 this.collection.set(Uri.file(file),
-                    holesPerFile.get(file).map((hole) =>
-                        new Diagnostic(mkRange(hole),
+                    holesPerFile.get(file).map(([editor, hole]) =>
+                        new Diagnostic(mkRange(editor, hole),
                             'Hole: ' + hole.results.map((a) => a.name).join('/'),
                             DiagnosticSeverity.Hint)));
             }
@@ -75,7 +82,7 @@ export class LeanHoles implements Disposable, CodeActionProvider {
             for (const editor of window.visibleTextEditors) {
                 if (editor.document.fileName === file) {
                     await editor.edit((builder) => {
-                        builder.replace(mkRange(res.replacements),
+                        builder.replace(mkRange(editor.document, res.replacements),
                             res.replacements.alternatives[0].code);
                     });
                 }
@@ -85,8 +92,8 @@ export class LeanHoles implements Disposable, CodeActionProvider {
 
     provideCodeActions(document: TextDocument, range: Range): Command[] {
         const cmds: Command[] = [];
-        for (const hole of this.holes) {
-            if (!range.intersection(mkRange(hole))) { continue; }
+        for (const [document, hole] of this.holes) {
+            if (!range.intersection(mkRange(document, hole))) { continue; }
             for (const action of hole.results) {
                 cmds.push({
                     title: action.description,

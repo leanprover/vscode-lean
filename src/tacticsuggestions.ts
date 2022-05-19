@@ -5,6 +5,7 @@ import { CodeActionContext, CodeActionProvider, Command, commands,
 import { InfoProvider } from './infoview';
 import { Server } from './server';
 import { regexGM, magicWord, regexM } from './trythis';
+import { CodePointPosition } from './utils/utf16Position';
 
 /** Pastes suggestions provided by tactics such as `squeeze_simp` */
 export class TacticSuggestions implements Disposable, CodeActionProvider {
@@ -49,7 +50,7 @@ export class TacticSuggestions implements Disposable, CodeActionProvider {
 
     private findSelectedMessage(textEditor: TextEditor) {
         const curFileName = textEditor.document.fileName;
-        const curPosition = textEditor.selection.active;
+        const curPosition = CodePointPosition.ofPosition(textEditor.document, textEditor.selection.active);
         // Find message closest to the cursor
         const messages = this.server.messages
             .filter((m: Message) => m.file_name === curFileName &&
@@ -73,8 +74,9 @@ export class TacticSuggestions implements Disposable, CodeActionProvider {
         suggestion = suggestion.trim();
 
         // Start of the tactic call to replace
-        const startLine = m.pos_line - 1;
-        let startCol = m.pos_col;
+        const startPos = new CodePointPosition(m.pos_line - 1, m.pos_col).toPosition(textEditor.document);
+        const startLine = startPos.line;
+        let startCol = startPos.character;
 
         // Try to determine the end of the tactic call to replace.
         // Heuristic: Find the next comma, semicolon, unmatched closing bracket,

@@ -10,6 +10,7 @@ import {
 import { Server } from './server';
 import { ToInfoviewMessage, FromInfoviewMessage, PinnedLocation, InsertTextMessage, ServerRequestMessage, RevealMessage, HoverPositionMessage, locationEq, Location, InfoViewTacticStateFilter } from './shared'
 import { StaticServer } from './staticserver';
+import { CodePointPosition } from './utils/utf16Position';
 
 export class InfoProvider implements Disposable {
     /** Instance of the panel. */
@@ -60,7 +61,7 @@ export class InfoProvider implements Disposable {
                     let changed: boolean = false;
                     this.pins = this.pins.map(pin => {
                         if (pin.file_name !== e.document.fileName) { return pin; }
-                        let newPosition = this.positionOfLocation(pin);
+                        let newPosition = this.positionOfLocation(pin).toPosition(e.document);
                         for (const chg of e.contentChanges) {
                             if (newPosition.isAfterOrEqual(chg.range.start)) {
                                 let lines = 0;
@@ -76,7 +77,7 @@ export class InfoProvider implements Disposable {
                             }
                         }
                         newPosition = e.document.validatePosition(newPosition);
-                        const new_pin = this.makeLocation(pin.file_name, newPosition);
+                        const new_pin = this.makeLocation(pin.file_name, CodePointPosition.ofPosition(e.document, newPosition));
                         if (!locationEq(new_pin, pin)) {changed = true; }
                         return { ...new_pin, key: pin.key };
                     });
@@ -235,7 +236,7 @@ export class InfoProvider implements Disposable {
             }
         }
         if (!editor) {return; }
-        const pos = message.loc ? this.positionOfLocation(message.loc) : editor.selection.active;
+        const pos = message.loc ? this.positionOfLocation(message.loc).toPosition(editor.document) : editor.selection.active;
         const insert_type = message.insert_type ?? 'relative';
         if (insert_type === 'relative') {
             // in this case, assume that we actually want to insert at the same
@@ -261,10 +262,10 @@ export class InfoProvider implements Disposable {
         }
     }
 
-    private positionOfLocation(l: Location): Position {
-        return new Position(l.line - 1, l.column ?? 0);
+    private positionOfLocation(l: Location): CodePointPosition {
+        return new CodePointPosition(l.line - 1, l.column ?? 0);
     }
-    private makeLocation(file_name: string, pos: Position): Location {
+    private makeLocation(file_name: string, pos: CodePointPosition): Location {
         return {
             file_name,
             line: pos.line + 1,
@@ -293,7 +294,6 @@ export class InfoProvider implements Disposable {
     }
 
     private async revealEditorPosition(uri: Uri, line: number, column: number) {
-        const pos = new Position(line - 1, column);
         let editor = null;
         for (const e of window.visibleTextEditors) {
             if (e.document.uri.toString() === uri.toString()) {
@@ -306,6 +306,7 @@ export class InfoProvider implements Disposable {
             const td = await workspace.openTextDocument(uri);
             editor = await window.showTextDocument(td, c, false);
         }
+        const pos = new CodePointPosition(line - 1, column).toPosition(editor.document);
         editor.revealRange(new Range(pos, pos), TextEditorRevealType.InCenterIfOutsideViewport);
         editor.selection = new Selection(pos, pos);
         return;
@@ -317,9 +318,9 @@ export class InfoProvider implements Disposable {
         const endColumn = column;
         for (const editor of window.visibleTextEditors) {
             if (editor.document.uri.path === file_name) {
-                const pos = new Position(line - 1, column);
-                const endPos = new Position(endLine - 1, endColumn);
-                const range = new Range(pos, endPos);
+                const pos = new CodePointPosition(line - 1, column);
+                const endPos = new CodePointPosition(endLine - 1, endColumn);
+                const range = new Range(pos.toPosition(editor.document), endPos.toPosition(editor.document));
                 editor.setDecorations(this.hoverDecorationType, [range]);
             }
         }
@@ -344,7 +345,8 @@ export class InfoProvider implements Disposable {
 
     private getActiveCursorLocation(): Location | null {
         if (!window.activeTextEditor || !languages.match(this.leanDocs, window.activeTextEditor.document)) {return null; }
-        return this.makeLocation(window.activeTextEditor.document.fileName, window.activeTextEditor.selection.active);
+        let p = CodePointPosition.ofPosition(window.activeTextEditor.document, window.activeTextEditor.selection.active);
+        return this.makeLocation(window.activeTextEditor.document.fileName, p);
     }
 
     private updateTypeStatus(info: InfoResponse) {
