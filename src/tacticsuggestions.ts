@@ -42,7 +42,8 @@ export class TacticSuggestions implements Disposable, CodeActionProvider {
 
     private findTextEditor(fileName: string) {
         for (const textEditor of window.visibleTextEditors) {
-            if (textEditor.document.uri.toString() === Uri.file(fileName).toString()) {
+            // note we cannot compare URIs as the `Message` type doesn't contain them
+            if (textEditor.document.fileName === fileName) {
                 return textEditor;
             }
         }
