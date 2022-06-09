@@ -15,6 +15,7 @@ import { RoiManager } from './roi';
 import { LeanWorkspaceSymbolProvider } from './search';
 import { Server } from './server';
 import { LeanStatusBarItem } from './statusbar';
+import { LeanDocumentSymbolProvider } from './symbol';
 import { LeanSyncService } from './sync';
 import { LeanTaskGutter, LeanTaskMessages } from './taskgutter';
 import { StaticServer } from './staticserver';
@@ -98,6 +99,11 @@ export async function activate(context: ExtensionContext): Promise<void> {
     context.subscriptions.push(
         languages.registerWorkspaceSymbolProvider(
             new LeanWorkspaceSymbolProvider(server)));
+
+    // Symbols
+    context.subscriptions.push(
+        languages.registerDocumentSymbolProvider(
+            LEAN_MODE, new LeanDocumentSymbolProvider(server)));
 
     // Holes
     context.subscriptions.push(new LeanHoles(server, LEAN_MODE));
