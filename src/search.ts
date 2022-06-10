@@ -1,5 +1,6 @@
 import { CancellationToken, Location, Position, ProviderResult, SymbolInformation, SymbolKind, Uri, workspace, WorkspaceSymbolProvider } from 'vscode';
 import { Server } from './server';
+import { toSymbolKind } from './utils/symbolKinds';
 import { CodePointPosition } from './utils/utf16Position';
 
 export class LeanWorkspaceSymbolProvider implements WorkspaceSymbolProvider {
@@ -14,7 +15,7 @@ export class LeanWorkspaceSymbolProvider implements WorkspaceSymbolProvider {
                 const document = await workspace.openTextDocument(Uri.file(item.source.file));
                 const loc = new Location(Uri.file(item.source.file),
                     new CodePointPosition(item.source.line - 1, item.source.column).toPosition(document));
-                return new SymbolInformation(item.text, SymbolKind.Function, item.type, loc);
+                return new SymbolInformation(item.text, toSymbolKind(item.kind), item.type, loc);
             }));
     }
 }

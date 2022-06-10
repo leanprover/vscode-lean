@@ -2,6 +2,7 @@ import { CompletionItem, CompletionItemKind, CompletionItemProvider,
     MarkdownString, Position, Range, TextDocument, workspace } from 'vscode';
 import { Server } from './server';
 import { isInputCompletion } from './util';
+import { toCompletionItemKind } from './utils/symbolKinds';
 import { CodePointPosition } from './utils/utf16Position';
 
 const keywords = [
@@ -48,7 +49,7 @@ export class LeanCompletionItemProvider implements CompletionItemProvider {
             const completions: CompletionItem[] = [];
             if (message.completions) {
                 for (const completion of message.completions) {
-                    const item = new CompletionItem(completion.text, CompletionItemKind.Function);
+                    const item = new CompletionItem(completion.text, toCompletionItemKind(completion.kind));
                     item.range = new Range(position.translate(0, -message.prefix.length), position);
                     if (completion.tactic_params) {
                         item.detail = completion.tactic_params.join(' ');
