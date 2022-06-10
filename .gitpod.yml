@@ -1,0 +1,28 @@
+additionalRepositories:
+  - url: https://github.com/leanprover-community/lean
+  - url: https://github.com/leanprover/lean-client-js
+
+vscode:
+  extensions:
+    - dbaeumer.vscode-eslint
+    - ms-vscode.cmake-tools
+    - eamodio.tsl-problem-matcher
+    # ms-vscode.cpptools is not available from openvsx
+
+tasks:
+  - before: |
+      cd ../lean-client-js
+    init: |
+      npm install
+      npm run bootstrap
+      gp sync-done lean-client
+    command: |
+      npm run compile
+  - init: |
+      gp sync-await lean-client
+      npm install ../lean-client-js
+      npm install
+    command: |
+      npm run compile
+
+workspaceLocation: vscode-lean/lean.code-workspace
