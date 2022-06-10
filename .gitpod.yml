@@ -7,7 +7,7 @@ vscode:
     - dbaeumer.vscode-eslint
     - ms-vscode.cmake-tools
     - eamodio.tsl-problem-matcher
-    - ms-vscode.cpptools  # not available from openvsx, but might work via "open in vscode"
+    - ms-vscode.cpptools  # not available from openvsx, but works via "open in vscode"
 
 tasks:
   - before: |
@@ -26,5 +26,9 @@ tasks:
       npm link lean-client-js-node lean-client-js-core
     command: |
       npm run compile
+
+  # We deliberately do not deal with cmake and elan here, as rebuilding lean is slow, and we want to
+  # ensure that the "do you want to install elan" prompt keeps working. To test a local lean build
+  # after clicking this prompt, use `~/.elan/bin/elan toolchain link /workspace/lean`.
 
 workspaceLocation: vscode-lean/lean.code-workspace
