@@ -20,9 +20,11 @@ tasks:
       npm run compile
   - init: |
       gp sync-await lean-client
-      npm install ../lean-client-js/lean-client-js-node
-      npm install ../lean-client-js/lean-client-js-core
+      (cd ../lean-client-js/lean-client-js-core && npm link)
+      (cd ../lean-client-js/lean-client-js-node && npm link)
       npm install
+      npm link lean-client-js-core
+      npm link lean-client-js-node
     command: |
       npm run compile
 
