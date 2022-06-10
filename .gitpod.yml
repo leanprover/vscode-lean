@@ -23,8 +23,7 @@ tasks:
       (cd ../lean-client-js/lean-client-js-core && npm link)
       (cd ../lean-client-js/lean-client-js-node && npm link)
       npm install
-      npm link lean-client-js-core
-      npm link lean-client-js-node
+      npm link lean-client-js-node lean-client-js-core
     command: |
       npm run compile
 
