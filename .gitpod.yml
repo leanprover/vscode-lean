@@ -1,13 +1,13 @@
 additionalRepositories:
-  - url: https://github.com/leanprover-community/lean
-  - url: https://github.com/leanprover/lean-client-js
+  - url: https://github.com/leanprover-community/lean/tree/eric-wieser/completion-kind
+  - url: https://github.com/eric-wieser/lean-client-js/tree/completion-kind
 
 vscode:
   extensions:
     - dbaeumer.vscode-eslint
     - ms-vscode.cmake-tools
     - eamodio.tsl-problem-matcher
-    # ms-vscode.cpptools is not available from openvsx
+    - ms-vscode.cpptools  # is not available from openvsx
 
 tasks:
   - before: |
@@ -23,8 +23,7 @@ tasks:
       (cd ../lean-client-js/lean-client-js-core && npm link)
       (cd ../lean-client-js/lean-client-js-node && npm link)
       npm install
-      npm link lean-client-js-core
-      npm link lean-client-js-node
+      npm link lean-client-js-core lean-client-js-node
     command: |
       npm run compile
 
