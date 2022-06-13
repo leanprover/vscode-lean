@@ -31,4 +31,4 @@ tasks:
   # ensure that the "do you want to install elan" prompt keeps working. To test a local lean build
   # after clicking this prompt, use `~/.elan/bin/elan toolchain link /workspace/lean`.
 
-workspaceLocation: vscode-lean/lean.code-workspace
+workspaceLocation: vscode-lean/.gitpod/lean.code-workspace
