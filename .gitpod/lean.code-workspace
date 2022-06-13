@@ -1,13 +1,13 @@
 {
 	"folders": [
 		{
-			"path": "."
+			"path": ".."
 		},
 		{
-			"path": "../lean"
+			"path": "../../lean"
 		},
 		{
-			"path": "../lean-client-js"
+			"path": "../../lean-client-js"
 		}
 	],
 }
