@@ -4,6 +4,7 @@ import { SymbolKind as LeanSymbolKind } from 'lean-client-js-core';
 /** Convert from the lean "kinds" o the closest applicable {@link SymbolKind} */
 export function toSymbolKind (s?: LeanSymbolKind): SymbolKind {
     switch (s) {
+        case undefined: return SymbolKind.Function;  // for older lean servers
         case 'meta': return SymbolKind.Event;
         case 'class': return SymbolKind.Interface;
         case 'definition': return SymbolKind.Field;
@@ -19,6 +20,7 @@ const x = function () {};
 
 export function toCompletionItemKind (s?: LeanSymbolKind): CompletionItemKind {
     switch (s) {
+        case undefined: return CompletionItemKind.Function;  // for older lean servers
         case 'meta': return CompletionItemKind.Event;
         case 'class': return CompletionItemKind.Interface;
         case 'definition': return CompletionItemKind.Field;
