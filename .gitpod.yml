@@ -1,5 +1,5 @@
 additionalRepositories:
-  - url: https://github.com/leanprover-community/lean/tree/eric-wieser/completion-kind
+  - url: https://github.com/leanprover-community/lean
   - url: https://github.com/eric-wieser/lean-client-js/tree/completion-kind
 
 vscode:
