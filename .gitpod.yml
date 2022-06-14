@@ -1,0 +1,34 @@
+additionalRepositories:
+  - url: https://github.com/leanprover-community/lean
+  - url: https://github.com/leanprover/lean-client-js
+
+vscode:
+  extensions:
+    - dbaeumer.vscode-eslint
+    - ms-vscode.cmake-tools
+    - eamodio.tsl-problem-matcher
+    - ms-vscode.cpptools  # not available from openvsx, but works via "open in vscode"
+
+tasks:
+  - before: |
+      cd ../lean-client-js
+    init: |
+      npm install
+      npm run bootstrap
+      gp sync-done lean-client
+    command: |
+      npm run compile
+  - init: |
+      gp sync-await lean-client
+      (cd ../lean-client-js/lean-client-js-core && npm link)
+      (cd ../lean-client-js/lean-client-js-node && npm link)
+      npm install
+      npm link lean-client-js-node lean-client-js-core
+    command: |
+      npm run compile
+
+  # We deliberately do not deal with cmake and elan here, as rebuilding lean is slow, and we want to
+  # ensure that the "do you want to install elan" prompt keeps working. To test a local lean build
+  # after clicking this prompt, use `~/.elan/bin/elan toolchain link /workspace/lean`.
+
+workspaceLocation: vscode-lean/.gitpod/lean.code-workspace
