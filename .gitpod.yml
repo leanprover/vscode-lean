@@ -1,6 +1,6 @@
 additionalRepositories:
-  - url: https://github.com/leanprover-community/lean
-  - url: https://github.com/leanprover/lean-client-js
+  - url: https://github.com/leanprover-community/lean/pull/724
+  - url: https://github.com/leanprover/lean-client-js/pull/45
 
 vscode:
   extensions:
