@@ -13,9 +13,12 @@ export class LeanDocumentSymbolProvider implements DocumentSymbolProvider {
     }
 
     async provideDocumentSymbols(document: TextDocument, token: CancellationToken): Promise<DocumentSymbol[]> {
-        const response = await this.server.symbols(document.fileName);
+        const response : SymbolResponse = await this.server.symbols(document.fileName);
         const infos : DocumentSymbol[] = [];
 
+        // Rather than outputting a tree of namespaces, we track the current stack which more accurately
+        // models the way that namespaces are opened, closed, and reopened in Lean. This makes "sort by position"
+        // more useful in the outline view, but "sort by name" less useful.
         let stack : DocumentSymbol[] = [];
 
         for (const item of response.results) {
@@ -44,43 +47,9 @@ export class LeanDocumentSymbolProvider implements DocumentSymbolProvider {
             }
 
             stack[stack.length-1].kind = toSymbolKind(item.kind);
-            stack[stack.length-1].detail = item.kind;
+            stack[stack.length-1].detail = item.type;
         }
 
-        // An alternative approach that does not preserve order
-        /*
-        const infos_by_name : Map<string, DocumentSymbol> = new Map();
-        const get_symbol = (s : string[], range: Range) : DocumentSymbol => {
-            const s_key = JSON.stringify(s);
-            const sym = infos_by_name.get(s_key);
-            if (sym) {
-                return sym;
-            }
-            const parent_s = s.slice();
-            const this_name = parent_s.pop();
-            const this_sym = new DocumentSymbol(this_name, null, SymbolKind.Namespace, range, range);
-            infos_by_name.set(s_key, this_sym);
-            if (parent_s.length > 0) {
-                const parent = get_symbol(parent_s, range);
-                parent.children.push(this_sym);
-            }
-            else {
-                infos.push(this_sym);
-            }
-            return this_sym;
-        };
-        
-        response.results
-            .filter((item) => item.source && item.source.file &&
-                item.source.line && item.source.column)
-            .map((item) => {
-                const pos = new CodePointPosition(item.source.line - 1, item.source.column).toPosition(document);
-                const range = new Range(pos, pos);
-
-                const sym = get_symbol(item.name_parts, range);
-                sym.kind = this.toSymbolKind(item.kind)
-            });
-        */
         return infos;
     }
 }
