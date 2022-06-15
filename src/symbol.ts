@@ -3,24 +3,13 @@ import { CancellationToken, Definition, DefinitionProvider, DocumentSymbol, Docu
 import { Server } from './server';
 import { InsertTextMessage } from './shared';
 import { CodePointPosition } from './utils/utf16Position';
+import { toSymbolKind } from './utils/symbolKinds';
 
 export class LeanDocumentSymbolProvider implements DocumentSymbolProvider {
     server: Server;
 
     constructor(server: Server) {
         this.server = server;
-    }
-
-    toSymbolKind (s: string ) : SymbolKind {
-        switch (s) {
-            case 'constructor': return SymbolKind.Constructor;
-            case 'projection': return SymbolKind.Field;
-            case 'class': return SymbolKind.Class;
-            case 'inductive': return SymbolKind.Struct;
-            case 'instance': return SymbolKind.Constant;
-            case 'def': return SymbolKind.Method;
-            default: return SymbolKind.Function;
-        }
     }
 
     async provideDocumentSymbols(document: TextDocument, token: CancellationToken): Promise<DocumentSymbol[]> {
@@ -54,7 +43,7 @@ export class LeanDocumentSymbolProvider implements DocumentSymbolProvider {
                 stack.push(curr)
             }
 
-            stack[stack.length-1].kind = this.toSymbolKind(item.kind);
+            stack[stack.length-1].kind = toSymbolKind(item.kind);
             stack[stack.length-1].detail = item.kind;
         }
 
