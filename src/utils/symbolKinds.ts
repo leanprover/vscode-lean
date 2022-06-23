@@ -16,8 +16,6 @@ export function toSymbolKind (s?: LeanSymbolKind): SymbolKind {
     }
 }
 
-const x = function () {};
-
 export function toCompletionItemKind (s?: LeanSymbolKind): CompletionItemKind {
     switch (s) {
         case undefined: return CompletionItemKind.Function;  // for older lean servers
