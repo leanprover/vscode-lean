@@ -1,6 +1,6 @@
 additionalRepositories:
-  - url: https://github.com/leanprover-community/lean/tree/eric-wieser/list-symbols
-  - url: https://github.com/eric-wieser/lean-client-js/tree/eric-wieser/list-symbols
+  - url: https://github.com/leanprover-community/lean
+  - url: https://github.com/leanprover/lean-client-js
 
 vscode:
   extensions:
