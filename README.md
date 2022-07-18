@@ -205,7 +205,7 @@ The format below is: "`lean.commandName` (command name): description", where `le
 
 * By default, VS Code will complete `then` to `has_bind.and_then` when you press enter.  To disable this behavior, set `"editor.acceptSuggestionOnEnter": false`.
 
-* If you like colored brackets, try out [Bracket Pair Colorizer 2](https://marketplace.visualstudio.com/items?itemName=CoenraadS.bracket-pair-colorizer-2).
+* VSCode now colors bracket pairs by default. If you don't like that, untick the "Bracket Pair Colorization" checkbox in the settings (or equivalently set `"editor.bracketPairColorization.enabled": false`).
 
 ## Development
 
