@@ -19,18 +19,42 @@ interface MessageViewProps {
     m: Message;
 }
 
+
+function regex_map<T>(regex: RegExp, s: string, f_no_match: (snm : string) => T, f_match: (m : RegExpExecArray) => T ) : T[] {
+    const r = new RegExp(regex);
+    const out = [];
+    let lastIdx = r.lastIndex;
+    let match : RegExpExecArray = null;
+    while ((match = r.exec(s)) !== null) {
+        const not_matched = s.slice(lastIdx, match.index);
+        if (not_matched) out.push(f_no_match(not_matched));
+        out.push(f_match(match));
+        lastIdx = r.lastIndex;
+    }
+    const final_non_match = s.slice(lastIdx);
+    if (final_non_match) out.push(final_non_match);
+    return out;
+}
+
+
 const MessageView = React.memo(({m}: MessageViewProps) => {
     const b = escapeHtml(basename(m.file_name));
     const l = m.pos_line; const c = m.pos_col;
     const loc: Location = {file_name: m.file_name, column: c, line: l}
     const shouldColorize = m.severity === 'error';
-    let text = escapeHtml(m.text)
-    text = text.replace(trythis.regexGM, (_, tactic) => {
-        const command = encodeURI('command:_lean.pasteTacticSuggestion?' +
-            JSON.stringify([m, tactic]));
-        return `${trythis.magicWord}<a class="link" href="${command}" title="${tactic}">${tactic}</a>`
-    });
-    text = shouldColorize ? colorizeMessage(text) : text;
+
+    const text_nodes = regex_map(trythis.regexGM, m.text,
+        (text) => {
+            text = escapeHtml(text);
+            text = shouldColorize ? colorizeMessage(text) : text;
+            // TODO: avoid this span tag somehow
+            return <span dangerouslySetInnerHTML={{ __html: text }}></span>;
+        },
+        (tactic) => {
+            const command = encodeURI('command:_lean.pasteTacticSuggestion?' + JSON.stringify([m, tactic[0]]));
+            return <>{trythis.magicWord}<a className="link" href={command} title={tactic[0]}>{tactic[0]}</a></>
+        });
+
     const title = `${b}:${l}:${c}`;
     return <details open>
         <summary className={m.severity + ' mv2 pointer'}>{title}
@@ -42,7 +66,7 @@ const MessageView = React.memo(({m}: MessageViewProps) => {
         </summary>
         <div className="ml1">
             { m.widget ? <Widget fileName={m.file_name} widget={m.widget}/> :
-            <pre className="font-code" style={{whiteSpace: 'pre-wrap'}} dangerouslySetInnerHTML={{ __html: text }} />
+            <pre className="font-code" style={{whiteSpace: 'pre-wrap'}}>{text_nodes}</pre>
             }
         </div>
     </details>
