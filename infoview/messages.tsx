@@ -20,7 +20,7 @@ interface MessageViewProps {
 }
 
 const MessageView = React.memo(({m}: MessageViewProps) => {
-    const b = escapeHtml(basename(m.file_name));
+    const b = basename(m.file_name);
     const l = m.pos_line; const c = m.pos_col;
     const loc: Location = {file_name: m.file_name, column: c, line: l}
     const shouldColorize = m.severity === 'error';
