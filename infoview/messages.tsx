@@ -1,4 +1,4 @@
-import { basename, escapeHtml, colorizeMessage, regexMap } from './util';
+import { basename, colorizeMessage, regexMap } from './util';
 import { Message } from 'lean-client-js-node';
 import * as React from 'react';
 import { Location, Config } from '../src/shared';
@@ -26,12 +26,7 @@ const MessageView = React.memo(({m}: MessageViewProps) => {
     const shouldColorize = m.severity === 'error';
 
     const text_nodes = regexMap(trythis.regexGM, m.text,
-        (text) => {
-            text = escapeHtml(text);
-            text = shouldColorize ? colorizeMessage(text) : text;
-            // TODO: avoid this span tag somehow
-            return <span dangerouslySetInnerHTML={{ __html: text }}></span>;
-        },
+        (text) => shouldColorize ? colorizeMessage(text) : <>{text}</>,
         (match) => {
             const [_, tactic] = match;
             const command = encodeURI('command:_lean.pasteTacticSuggestion?' + JSON.stringify([m, tactic]));
