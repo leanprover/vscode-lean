@@ -11,6 +11,25 @@ export function escapeHtml(s: string): string {
         .replace(/'/g, '&#039;');
 }
 
+/// Split a string by a regex, executing `f_no_match` on the pieces which don't match, `f_match` on the pieces which do,
+/// and concatenating the results into an array.
+export function regexMap<T>(regex: RegExp, s: string, f_no_match: (snm : string) => T, f_match: (m : RegExpExecArray) => T ) : T[] {
+    const r = new RegExp(regex);
+    const out = [];
+    let lastIdx = r.lastIndex;
+    let match = null;
+    while ((match = r.exec(s)) !== null) {
+        const not_matched = s.slice(lastIdx, match.index);
+        if (not_matched) out.push(f_no_match(not_matched));
+        out.push(f_match(match));
+        lastIdx = r.lastIndex;
+        if (!r.global) break;
+    }
+    const final_non_match = s.slice(lastIdx);
+    if (final_non_match) out.push(final_non_match);
+    return out;
+}
+
 export function colorizeMessage(goal: string): string {
     return goal
         .replace(/^([|⊢]) /mg, '<strong class="goal-vdash">$1</strong> ')
