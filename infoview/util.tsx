@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Event } from 'lean-client-js-core';
 
-/// Split a string by a regex, executing `f_no_match` on the pieces which don't match, `f_match` on the pieces which do,
-/// and concatenating the results into an array.
+/** Split a string by a regex, executing `f_no_match` on the pieces which don't match, `f_match` on the pieces which do,
+and concatenating the results into an array. */
 export function regexMap<T>(regex: RegExp, s: string, f_no_match: (snm : string) => T, f_match: (m : RegExpExecArray) => T ) : T[] {
     // copy the regex to reset the position information
     const r = new RegExp(regex);
