@@ -1,4 +1,4 @@
-import { basename, escapeHtml, colorizeMessage } from './util';
+import { basename, colorizeMessage, regexMap } from './util';
 import { Message } from 'lean-client-js-node';
 import * as React from 'react';
 import { Location, Config } from '../src/shared';
@@ -20,17 +20,19 @@ interface MessageViewProps {
 }
 
 const MessageView = React.memo(({m}: MessageViewProps) => {
-    const b = escapeHtml(basename(m.file_name));
+    const b = basename(m.file_name);
     const l = m.pos_line; const c = m.pos_col;
     const loc: Location = {file_name: m.file_name, column: c, line: l}
     const shouldColorize = m.severity === 'error';
-    let text = escapeHtml(m.text)
-    text = text.replace(trythis.regexGM, (_, tactic) => {
-        const command = encodeURI('command:_lean.pasteTacticSuggestion?' +
-            JSON.stringify([m, tactic]));
-        return `${trythis.magicWord}<a class="link" href="${command}" title="${tactic}">${tactic}</a>`
-    });
-    text = shouldColorize ? colorizeMessage(text) : text;
+
+    const text_nodes = regexMap(trythis.regexGM, m.text,
+        (text) => shouldColorize ? colorizeMessage(text) : <>{text}</>,
+        (match) => {
+            const [_, tactic] = match;
+            const command = encodeURI('command:_lean.pasteTacticSuggestion?' + JSON.stringify([m, tactic]));
+            return <>{trythis.magicWord}<a className="link" href={command} title={tactic}>{tactic}</a></>
+        });
+
     const title = `${b}:${l}:${c}`;
     return <details open>
         <summary className={m.severity + ' mv2 pointer'}>{title}
@@ -42,7 +44,7 @@ const MessageView = React.memo(({m}: MessageViewProps) => {
         </summary>
         <div className="ml1">
             { m.widget ? <Widget fileName={m.file_name} widget={m.widget}/> :
-            <pre className="font-code" style={{whiteSpace: 'pre-wrap'}} dangerouslySetInnerHTML={{ __html: text }} />
+            <pre className="font-code" style={{whiteSpace: 'pre-wrap'}}>{text_nodes}</pre>
             }
         </div>
     </details>

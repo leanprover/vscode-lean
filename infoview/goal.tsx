@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { colorizeMessage, escapeHtml } from './util';
+import { colorizeMessage } from './util';
 import { ConfigContext } from './index';
 
 interface GoalProps {
@@ -23,7 +23,7 @@ export function Goal(props: GoalProps): JSX.Element {
                 return filt.match ? test : !test;
             }).join('\n');
     }
-    goalString = colorizeMessage(escapeHtml(goalString));
+    const goalElem = colorizeMessage(goalString);
     return <div>
         {reFilters.length !== 0 && <div className="fr">
             <label>filter: </label>
@@ -32,7 +32,7 @@ export function Goal(props: GoalProps): JSX.Element {
                 {reFilters.map((obj,i) => <option value={i}>{obj.name || `${obj.match ? 'show ' : 'hide '}/${obj.regex}/${obj.flags}`}</option>)}
             </select>
         </div>}
-        <pre className="font-code"  style={{whiteSpace: 'pre-wrap'}} dangerouslySetInnerHTML={{ __html: goalString }} />
+        <pre className="font-code"  style={{whiteSpace: 'pre-wrap'}}>{goalElem}</pre>
     </div>
 
 }
