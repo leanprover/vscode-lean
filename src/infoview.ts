@@ -1,5 +1,8 @@
 import { InfoResponse, Connection } from 'lean-client-js-node';
+import { WidgetIdentifier, Request, GetWidgetRequest } from 'lean-client-js-core';
 import { join } from 'path';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios from 'axios';
 import {
     commands, Disposable, DocumentSelector,
     ExtensionContext, languages, Position, Range,
@@ -8,7 +11,10 @@ import {
     Uri, ViewColumn, WebviewPanel, window, workspace, env,
 } from 'vscode';
 import { Server } from './server';
-import { ToInfoviewMessage, FromInfoviewMessage, PinnedLocation, InsertTextMessage, ServerRequestMessage, RevealMessage, HoverPositionMessage, locationEq, Location, InfoViewTacticStateFilter } from './shared'
+import {
+    ToInfoviewMessage, FromInfoviewMessage, PinnedLocation, InsertTextMessage, ServerRequestMessage, RevealMessage, HoverPositionMessage, locationEq, Location, InfoViewTacticStateFilter,
+    SuggestionsModelResult
+} from './shared'
 import { StaticServer } from './staticserver';
 import { CodePointPosition } from './utils/utf16Position';
 
@@ -214,6 +220,9 @@ export class InfoProvider implements Disposable {
                 await this.sendConfig();
                 await this.postMessage({command: 'all_messages', messages: this.server.messages});
                 return;
+            case 'get_suggestions':
+                this.getSuggestions(message.reqId, message.goalState, message.prefix);
+                return;
         }
     }
     private handleServerRequest(message: ServerRequestMessage) {
@@ -388,4 +397,37 @@ export class InfoProvider implements Disposable {
             </body>
             </html>`
     }
+
+    private getSuggestions(reqId: number, goalState: string, prefix: string): void {
+        const api_key : string = workspace.getConfiguration('lean').get('suggestionAPIKey');
+        const url : string = workspace.getConfiguration('lean').get('suggestionURL');
+        if (goalState === 'no goals') { return; }
+        const data = JSON.stringify({
+            tactic_state: goalState,
+            prefix,
+            api_key
+        });
+        const config: AxiosRequestConfig = {
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'Content-Length': Buffer.byteLength(data)
+            }
+        };
+        axios.post(url, data, config).then(
+            (response: AxiosResponse<SuggestionsModelResult>) => {
+                void this.postMessage({
+                    command: 'Suggestions',
+                    results: response.data,
+                    reqId
+                });
+            },
+            (reason) => {
+                void this.postMessage({
+                    command: 'Suggestions_error',
+                    error: `failed to post ${data} for the following reason: ${reason}`
+                });
+            }
+        );
+    }
+
 }

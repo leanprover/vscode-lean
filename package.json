@@ -24,6 +24,16 @@
 					"default": "lean",
 					"markdownDescription": "Path to the Lean executable to use. **DO NOT CHANGE** from the default `lean` unless you know what you're doing!"
 				},
+				"lean.suggestionURL": {
+					"type": "string",
+					"default": "",
+					"markdownDescription": "URL to contact for model suggestions"
+				},
+				"lean.suggestionAPIKey": {
+					"type": "string",
+					"default": "",
+					"markdownDescription": "API Key to use for suggestions"
+				},
 				"lean.leanpkgPath": {
 					"type": "string",
 					"default": "leanpkg",

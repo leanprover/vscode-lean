@@ -1,5 +1,8 @@
 import { Server, Transport, Connection, Event, TransportError, Message } from 'lean-client-js-core';
-import { ToInfoviewMessage, FromInfoviewMessage, Config, Location, defaultConfig, PinnedLocation, InsertTextMessage } from '../src/shared';
+import {
+    ToInfoviewMessage, FromInfoviewMessage, Config, Location, defaultConfig, PinnedLocation, InsertTextMessage,
+    SuggestionsErrorInt, SuggestionsInt
+} from '../src/shared';
 declare const acquireVsCodeApi;
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const vscode = acquireVsCodeApi();
@@ -45,6 +48,8 @@ export const TogglePinEvent: Event<unknown> = new Event();
 export const ServerRestartEvent: Event<unknown> = new Event();
 export const AllMessagesEvent: Event<Message[]> = new Event();
 export const ToggleAllMessagesEvent: Event<unknown> = new Event();
+export const SuggestionsErrorEvent: Event<SuggestionsErrorInt> = new Event();
+export const SuggestionsEvent: Event<SuggestionsInt> = new Event();
 
 export let currentAllMessages: Message[] = [];
 AllMessagesEvent.on((msgs) => currentAllMessages = msgs);
@@ -69,6 +74,8 @@ window.addEventListener('message', event => { // messages from the extension
         case 'toggle_all_messages': ToggleAllMessagesEvent.fire({}); break;
         case 'server_event': break;
         case 'server_error': break;
+        case 'Suggestions_error': SuggestionsErrorEvent.fire(message); break;
+        case 'Suggestions': SuggestionsEvent.fire(message); break;
     }
 });
 

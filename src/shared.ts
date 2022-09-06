@@ -1,6 +1,7 @@
 /* This file contains all of the types that are common to the extension and the infoview. */
 
 import {  Message, Task } from 'lean-client-js-node';
+import { WidgetIdentifier } from 'lean-client-js-core';
 
 // import { ServerStatus } from './server';
 
@@ -97,17 +98,54 @@ export type FromInfoviewMessage =
     | InsertTextMessage
     | RevealMessage
     | HoverPositionMessage
-    | {command: 'stop_hover'}
+    | { command: 'stop_hover' }
     | SyncPinMessage
-    | {command: 'request_config'}
-    | {command: 'copy_text'; text: string}
+    | { command: 'request_config' }
+    | { command: 'copy_text'; text: string }
+    | { command: 'get_suggestions'; reqId: number; goalState: string, widget: WidgetIdentifier, prefix: string}
 
 /** Message from the extension to the infoview. */
 export type ToInfoviewMessage =
-    | { command: 'server_event' | 'server_error'; payload: string} // payloads have to be stringified json because vscode crashes if the depth is too big. }
-    | { command: 'position'; loc: Location}
-    | { command: 'on_config_change'; config: Partial<Config>}
-    | { command: 'all_messages'; messages: Message[]}
+    | { command: 'server_event' | 'server_error'; payload: string } // payloads have to be stringified json because vscode crashes if the depth is too big. }
+    | { command: 'position'; loc: Location }
+    | { command: 'on_config_change'; config: Partial<Config> }
+    | { command: 'all_messages'; messages: Message[] }
     | { command: 'toggle_all_messages' }
     | SyncPinMessage
-    | { command: 'pause' | 'continue' | 'toggle_updating' | 'copy_to_comment' | 'toggle_pin' | 'restart'}
+    | { command: 'pause' | 'continue' | 'toggle_updating' | 'copy_to_comment' | 'toggle_pin' | 'restart' }
+    | SuggestionsErrorInt
+    | SuggestionsInt
+
+
+export interface SuggestionsError {
+    error: string;
+}
+
+export interface SuggestionsErrorInt extends SuggestionsError {
+    command: 'Suggestions_error';
+}
+
+export type SuggestionsInfoStatus = 'loading' | 'error' | 'done' | 'valid' | 'solving';
+
+export interface SuggestionsReqId {
+    reqId: number;
+}
+
+export interface SuggestionsTacticInfo {
+    tactic: string;
+    next_ts?: string;
+    n_subgoals?: number;
+    error?: string;
+    status?: SuggestionsInfoStatus;  // actually 'loading' is not possible
+    message?: string;
+}
+
+export interface SuggestionsModelResult {
+    tactic_infos?: SuggestionsTacticInfo[];
+    error?: string;
+}
+
+export interface SuggestionsInt extends SuggestionsReqId {
+    command: 'Suggestions';
+    results: SuggestionsModelResult;
+}
