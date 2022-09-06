@@ -98,11 +98,11 @@ export type FromInfoviewMessage =
     | InsertTextMessage
     | RevealMessage
     | HoverPositionMessage
-    | { command: 'stop_hover' }
+    | {command: 'stop_hover'}
     | SyncPinMessage
-    | { command: 'request_config' }
-    | { command: 'copy_text'; text: string }
-    | { command: 'get_suggestions'; reqId: number; goalState: string, widget: WidgetIdentifier, prefix: string}
+    | {command: 'request_config'}
+    | {command: 'copy_text'; text: string}
+    | {command: 'get_suggestions'; reqId: number; goalState: string, widget: WidgetIdentifier, prefix: string}
 
 /** Message from the extension to the infoview. */
 export type ToInfoviewMessage =
@@ -112,7 +112,7 @@ export type ToInfoviewMessage =
     | { command: 'all_messages'; messages: Message[] }
     | { command: 'toggle_all_messages' }
     | SyncPinMessage
-    | { command: 'pause' | 'continue' | 'toggle_updating' | 'copy_to_comment' | 'toggle_pin' | 'restart' }
+    | { command: 'pause' | 'continue' | 'toggle_updating' | 'copy_to_comment' | 'toggle_pin' | 'restart'}
     | SuggestionsErrorInt
     | SuggestionsInt
 
