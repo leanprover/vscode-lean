@@ -354,7 +354,7 @@ export class InfoProvider implements Disposable {
 
     private getActiveCursorLocation(): Location | null {
         if (!window.activeTextEditor || !languages.match(this.leanDocs, window.activeTextEditor.document)) {return null; }
-        let p = CodePointPosition.ofPosition(window.activeTextEditor.document, window.activeTextEditor.selection.active);
+        const p = CodePointPosition.ofPosition(window.activeTextEditor.document, window.activeTextEditor.selection.active);
         return this.makeLocation(window.activeTextEditor.document.fileName, p);
     }
 
@@ -401,6 +401,14 @@ export class InfoProvider implements Disposable {
     private getSuggestions(reqId: number, goalState: string, prefix: string): void {
         const api_key : string = workspace.getConfiguration('lean').get('suggestionAPIKey');
         const url : string = workspace.getConfiguration('lean').get('suggestionURL');
+        if (!url) {
+            void this.postMessage({
+                command: 'Suggestions',
+                results: {'error': 'lean.suggestionURL not set.'},
+                reqId,
+            });
+            return
+        }
         if (goalState === 'no goals') { return; }
         const data = JSON.stringify({
             tactic_state: goalState,
