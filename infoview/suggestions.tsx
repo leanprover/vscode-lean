@@ -19,7 +19,15 @@ interface SuggestionsProps {
 function SingleTacticInfo(props: { tacticInfo: SuggestionsTacticInfo, widget: WidgetIdentifier}): JSX.Element {
     return (
         <a className={'font-code link pointer mh2 glow easeTransition ' + statusColTable.done} style={{whiteSpace: 'pre-wrap'}} key={`${props.tacticInfo.tactic}`}
-            onClick={e => { e.preventDefault(); post({ command: 'copy_text', text: props.tacticInfo.tactic }); }}
+            onClick={
+                e => {
+                    e.preventDefault();
+                    post({
+                        command: 'insert_text',
+                        text: `${props.tacticInfo.tactic},`,
+                        insert_type: 'relative'
+                    })
+                }}
         >
             {props.tacticInfo.tactic}
         </a>
