@@ -210,7 +210,7 @@ export function Info(props: InfoProps): JSX.Element {
                             </div>
                         </Details>
                 </div>
-                {doSuggest ? <div>
+                {(doSuggest && goalState) ? <div>
                     <Suggestor widget={widget} goalState={goalState} />
                 </div> : null }
                 {nothingToShow && (
