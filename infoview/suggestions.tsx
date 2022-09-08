@@ -134,10 +134,6 @@ export function Suggestor(props: SuggestionsProps): JSX.Element {
 
     return (
         <div>
-            <details open={true}>
-                <summary className={'mv2'}>
-                    Suggestions
-                </summary>
                 {errorMsg
                     ? <i className={'easeTransition mv2 ' + statusColTable.error}>{errorMsg}</i>
                     : <div>
