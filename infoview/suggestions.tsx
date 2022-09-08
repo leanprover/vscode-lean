@@ -135,7 +135,7 @@ export function Suggestor(props: SuggestionsProps): JSX.Element {
                     ? <i className={'easeTransition mv2 ' + statusColTable.error}>{errorMsg}</i>
                     : <div>
                         <form className='ml2' onSubmit={(e) => e.preventDefault()}>
-                            <span>Tactic prefix :</span>
+                            <span>Tactic prefix: </span>
                             <input {...inputProps} onChange={(e) => setPrefix(e.target.value)} />
                         </form>
                         <Suggestions widget={props.widget} goalState={props.goalState} reqId={suggReqId}/>
