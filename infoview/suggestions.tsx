@@ -134,7 +134,7 @@ export function Suggestor(props: SuggestionsProps): JSX.Element {
 
     return (
         <div>
-            <details open={false}>
+            <details>
                 <summary className={'mv2'}>
                     Suggestions
                 </summary>

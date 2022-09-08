@@ -6,7 +6,7 @@ import { Widget } from './widget';
 import { Goal } from './goal';
 import { Messages, processMessages, ProcessedMessage, GetMessagesFor } from './messages';
 import { basename, useEvent } from './util';
-import { CopyToCommentIcon, PinnedIcon, PinIcon, ContinueIcon, PauseIcon, RefreshIcon, GoToFileIcon } from './svg_icons';
+import { CopyToCommentIcon, PinnedIcon, PinIcon, ContinueIcon, PauseIcon, RefreshIcon, GoToFileIcon, DoSuggestIcon, DoNotSuggestIcon } from './svg_icons';
 import { Details } from './collapsing';
 import { Event, InfoResponse, CurrentTasksResponse, Message } from 'lean-client-js-core';
 import { Suggestor } from './suggestions';
@@ -145,6 +145,7 @@ export function Info(props: InfoProps): JSX.Element {
     const {isCursor, isPinned, onPin} = props;
 
     const [isPaused, setPaused] = React.useState<boolean>(false);
+    const [doSuggest, setDoSuggest] = React.useState<boolean>(false);
     const isCurrentlyPaused = React.useRef<boolean>();
     isCurrentlyPaused.current = isPaused;
 
@@ -195,6 +196,7 @@ export function Info(props: InfoProps): JSX.Element {
                     <a className="link pointer mh2 dim" onClick={e => { e.preventDefault(); onPin(!isPinned)}} title={isPinned ? 'unpin' : 'pin'}>{isPinned ? <PinnedIcon/> : <PinIcon/>}</a>
                     <a className="link pointer mh2 dim" onClick={e => { e.preventDefault(); setPaused(!isPaused)}} title={isPaused ? 'continue updating' : 'pause updating'}>{isPaused ? <ContinueIcon/> : <PauseIcon/>}</a>
                     { !isPaused && <a className={'link pointer mh2 dim'} onClick={e => { e.preventDefault(); forceUpdate(); }} title="update"><RefreshIcon/></a> }
+                    <a className="link pointer mh2 dim" onClick={e => { e.preventDefault(); setDoSuggest(!doSuggest)}} title={doSuggest ? 'stop suggestions' : 'activate suggestions'}>{doSuggest ? <DoNotSuggestIcon/> : <DoSuggestIcon/>}</a>
                 </span>
             </summary>
             <div className="ml1">
@@ -226,9 +228,9 @@ export function Info(props: InfoProps): JSX.Element {
                             </div>
                         </Details>
                 </div>
-                <div>
+                {doSuggest ? <div>
                     <Suggestor widget={widget} goalState={goalState} />
-                </div>
+                </div> : null }
                 {nothingToShow && (
                     loading ? 'Loading...' :
                     isPaused ? <span>Updating is paused. <a className="link pointer dim" onClick={e => forceUpdate()}>Refresh</a> or <a className="link pointer dim" onClick={e => setPaused(false)}>resume updating</a> to see information</span> :
