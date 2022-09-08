@@ -112,7 +112,7 @@ export function Suggestor(props: SuggestionsProps): JSX.Element {
 
     React.useEffect(() => {
         setDoSuggest(true);
-    }, [prefix, props.goalState, props.widget])
+    }, [prefix, props.goalState])
     React.useEffect(() => {
         if (doSuggest) setDoSuggest(false);
         else return;
@@ -122,14 +122,13 @@ export function Suggestor(props: SuggestionsProps): JSX.Element {
                     command: 'get_suggestions',
                     reqId: rid + 1,
                     goalState: props.goalState,
-                    widget: props.widget,
                     prefix
                 });
                 setErrorMsg(undefined); // reset error msg
                 return rid + 1
             });
         }
-    }, [prefix, props.goalState, props.widget, doSuggest])
+    }, [prefix, props.goalState, doSuggest])
 
     const inputProps = { style: { display: 'inline' }, type: 'text', size: 12, value: prefix };
 

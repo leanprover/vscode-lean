@@ -102,7 +102,7 @@ export type FromInfoviewMessage =
     | SyncPinMessage
     | {command: 'request_config'}
     | {command: 'copy_text'; text: string}
-    | {command: 'get_suggestions'; reqId: number; goalState: string, widget: WidgetIdentifier, prefix: string}
+    | {command: 'get_suggestions'; reqId: number; goalState: string, prefix: string}
 
 /** Message from the extension to the infoview. */
 export type ToInfoviewMessage =
