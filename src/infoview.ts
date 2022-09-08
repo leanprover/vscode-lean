@@ -404,7 +404,7 @@ export class InfoProvider implements Disposable {
         if (!url) {
             void this.postMessage({
                 command: 'Suggestions',
-                results: {'error': 'lean.suggestionURL not set.'},
+                results: {'error': 'lean.suggestionURL not set, please ask on Zulip for URL and API key.'},
                 reqId,
             });
             return
