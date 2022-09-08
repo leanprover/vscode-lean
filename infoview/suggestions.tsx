@@ -73,7 +73,7 @@ function Suggestions(props: {
         setErrorMsg(undefined); // reset error msg
     }, [props.reqId]);
 
-    return goalState && (
+    return props.goalState && (
         <div>
             <p>
                 <span className={'easeTransition ml2 b-ns ' + statusColTable[status]}>Suggestions</span>
