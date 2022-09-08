@@ -75,9 +75,6 @@ function Suggestions(props: {
 
     return props.goalState && (
         <div>
-            <p>
-                <span className={'easeTransition ml2 b-ns ' + statusColTable[status]}>Suggestions</span>
-            </p>
             <div>
                 {['loading', 'error'].includes(status) ?
                     <p className={'easeTransition ml3 ' + statusColTable[status]}>
