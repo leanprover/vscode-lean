@@ -144,7 +144,6 @@ export function Suggestor(props: SuggestionsProps): JSX.Element {
                         <Suggestions widget={props.widget} goalState={props.goalState} reqId={suggReqId}/>
                       </div>
                 }
-            </details>
         </div>
     );
 }
