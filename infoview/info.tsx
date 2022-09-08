@@ -178,7 +178,7 @@ export function Info(props: InfoProps): JSX.Element {
                     <a className="link pointer mh2 dim" onClick={e => { e.preventDefault(); onPin(!isPinned)}} title={isPinned ? 'unpin' : 'pin'}>{isPinned ? <PinnedIcon/> : <PinIcon/>}</a>
                     <a className="link pointer mh2 dim" onClick={e => { e.preventDefault(); setPaused(!isPaused)}} title={isPaused ? 'continue updating' : 'pause updating'}>{isPaused ? <ContinueIcon/> : <PauseIcon/>}</a>
                     { !isPaused && <a className={'link pointer mh2 dim'} onClick={e => { e.preventDefault(); forceUpdate(); }} title="update"><RefreshIcon/></a> }
-                    <a className="link pointer mh2 dim" onClick={e => { e.preventDefault(); setDoSuggest(!doSuggest)}} title={doSuggest ? 'stop suggestions' : 'activate suggestions'}>{doSuggest ? <DoNotSuggestIcon/> : <DoSuggestIcon/>}</a>
+                    <a className="link pointer mh2 dim" onClick={e => { e.preventDefault(); setDoSuggest(!doSuggest)}} title={doSuggest ? 'stop ML suggestions' : 'activate ML suggestions'}>{doSuggest ? <DoNotSuggestIcon/> : <DoSuggestIcon/>}</a>
                 </span>
             </summary>
             <div className="ml1">
