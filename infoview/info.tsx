@@ -5,7 +5,7 @@ import { LocationContext, ConfigContext } from '.';
 import { Widget } from './widget';
 import { Goal } from './goal';
 import { Messages, processMessages, ProcessedMessage, GetMessagesFor } from './messages';
-import { basename, useEvent } from './util';
+import { basename, useEvent, delayedThrottled } from './util';
 import { CopyToCommentIcon, PinnedIcon, PinIcon, ContinueIcon, PauseIcon, RefreshIcon, GoToFileIcon, DoSuggestIcon, DoNotSuggestIcon } from './svg_icons';
 import { Details } from './collapsing';
 import { Event, InfoResponse, CurrentTasksResponse, Message } from 'lean-client-js-core';
@@ -62,24 +62,6 @@ function useMappedEvent<T, S>(ev: Event<T>, initial: S, f: (_: T) => S, deps?: R
     const [s, setS] = React.useState<S>(initial);
     useEvent(ev, (t) => setS(f(t)), deps);
     return s;
-}
-
-// returns function that triggers `cb`
-// - but only ms milliseconds after the first call
-// - and not more often than once every ms milliseconds
-function delayedThrottled(ms: number, cb: () => void): () => void {
-    const waiting = React.useRef<boolean>(false);
-    const callbackRef = React.useRef<() => void>();
-    callbackRef.current = cb;
-    return () => {
-        if (!waiting.current) {
-            waiting.current = true;
-            setTimeout(() => {
-                waiting.current = false;
-                callbackRef.current();
-            }, ms);
-        }
-    };
 }
 
 interface InfoState {

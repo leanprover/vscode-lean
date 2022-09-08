@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { WidgetIdentifier } from 'lean-client-js-core';
 import { SuggestionsInfoStatus, SuggestionsInt, SuggestionsModelResult, SuggestionsTacticInfo } from '../src/shared';
-import { useEvent} from './util';
+import { useEvent, delayedThrottled } from './util';
 import { SuggestionsEvent, SuggestionsErrorEvent, post } from './server';
 
 const statusColTable: { [T in SuggestionsInfoStatus]: string } = {
@@ -113,22 +113,25 @@ export function Suggestor(props: SuggestionsProps): JSX.Element {
     React.useEffect(() => {
         setDoSuggest(true);
     }, [prefix, props.goalState])
-    React.useEffect(() => {
-        if (doSuggest) setDoSuggest(false);
-        else return;
-        if (props.goalState !== undefined && props.goalState !== 'no goals') {
-            setSuggReqId(rid => {
-                post({
-                    command: 'get_suggestions',
-                    reqId: rid + 1,
-                    goalState: props.goalState,
-                    prefix
+    React.useEffect(delayedThrottled(
+        300,
+        () => {
+            if (doSuggest) setDoSuggest(false);
+            else return;
+            if (props.goalState !== undefined && props.goalState !== 'no goals') {
+                setSuggReqId(rid => {
+                    post({
+                        command: 'get_suggestions',
+                        reqId: rid + 1,
+                        goalState: props.goalState,
+                        prefix
+                    });
+                    setErrorMsg(undefined); // reset error msg
+                    return rid + 1
                 });
-                setErrorMsg(undefined); // reset error msg
-                return rid + 1
-            });
+            }
         }
-    }, [prefix, props.goalState, doSuggest])
+    ), [prefix, props.goalState, doSuggest])
 
     const inputProps = { style: { display: 'inline' }, type: 'text', size: 12, value: prefix };
 
