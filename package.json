@@ -2,7 +2,7 @@
 	"name": "lean",
 	"displayName": "lean",
 	"description": "Lean 3 language support for VS Code",
-	"version": "0.16.54",
+	"version": "0.16.55",
 	"publisher": "jroesch",
 	"engines": {
 		"vscode": "^1.38.0"
