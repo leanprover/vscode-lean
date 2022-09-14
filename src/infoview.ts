@@ -412,13 +412,13 @@ export class InfoProvider implements Disposable {
         if (goalState === 'no goals') { return; }
         const data = JSON.stringify({
             tactic_state: goalState,
-            prefix,
-            api_key
+            prefix
         });
         const config: AxiosRequestConfig = {
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
-                'Content-Length': Buffer.byteLength(data)
+                'Content-Length': Buffer.byteLength(data),
+                'x-api-key': api_key,
             }
         };
         axios.post(url, data, config).then(
