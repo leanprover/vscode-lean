@@ -1,6 +1,21 @@
 import * as React from 'react';
 import { Event } from 'lean-client-js-core';
 
+export function delayedThrottled(ms: number, cb: () => void): () => void {
+    const waiting = React.useRef<boolean>(false);
+    const callbackRef = React.useRef<() => void>();
+    callbackRef.current = cb;
+    return () => {
+        if (!waiting.current) {
+            waiting.current = true;
+            setTimeout(() => {
+                waiting.current = false;
+                callbackRef.current();
+            }, ms);
+        }
+    };
+}
+
 /** Split a string by a regex, executing `f_no_match` on the pieces which don't match, `f_match` on the pieces which do,
 and concatenating the results into an array. */
 export function regexMap<T>(regex: RegExp, s: string, f_no_match: (snm : string) => T, f_match: (m : RegExpExecArray) => T ) : T[] {

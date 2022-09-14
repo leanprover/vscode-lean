@@ -5,10 +5,11 @@ import { LocationContext, ConfigContext } from '.';
 import { Widget } from './widget';
 import { Goal } from './goal';
 import { Messages, processMessages, ProcessedMessage, GetMessagesFor } from './messages';
-import { basename, useEvent } from './util';
-import { CopyToCommentIcon, PinnedIcon, PinIcon, ContinueIcon, PauseIcon, RefreshIcon, GoToFileIcon } from './svg_icons';
+import { basename, useEvent, delayedThrottled } from './util';
+import { CopyToCommentIcon, PinnedIcon, PinIcon, ContinueIcon, PauseIcon, RefreshIcon, GoToFileIcon, DoSuggestIcon, DoNotSuggestIcon } from './svg_icons';
 import { Details } from './collapsing';
 import { Event, InfoResponse, CurrentTasksResponse, Message } from 'lean-client-js-core';
+import { Suggestor } from './suggestions';
 
 /** Older versions of Lean can't deal with multiple simul info requests so this just prevents that. */
 class OneAtATimeDispatcher {
@@ -61,24 +62,6 @@ function useMappedEvent<T, S>(ev: Event<T>, initial: S, f: (_: T) => S, deps?: R
     const [s, setS] = React.useState<S>(initial);
     useEvent(ev, (t) => setS(f(t)), deps);
     return s;
-}
-
-// returns function that triggers `cb`
-// - but only ms milliseconds after the first call
-// - and not more often than once every ms milliseconds
-function delayedThrottled(ms: number, cb: () => void): () => void {
-    const waiting = React.useRef<boolean>(false);
-    const callbackRef = React.useRef<() => void>();
-    callbackRef.current = cb;
-    return () => {
-        if (!waiting.current) {
-            waiting.current = true;
-            setTimeout(() => {
-                waiting.current = false;
-                callbackRef.current();
-            }, ms);
-        }
-    };
 }
 
 interface InfoState {
@@ -144,6 +127,7 @@ export function Info(props: InfoProps): JSX.Element {
     const {isCursor, isPinned, onPin} = props;
 
     const [isPaused, setPaused] = React.useState<boolean>(false);
+    const [doSuggest, setDoSuggest] = React.useState<boolean>(false);
     const isCurrentlyPaused = React.useRef<boolean>();
     isCurrentlyPaused.current = isPaused;
 
@@ -194,6 +178,7 @@ export function Info(props: InfoProps): JSX.Element {
                     <a className="link pointer mh2 dim" onClick={e => { e.preventDefault(); onPin(!isPinned)}} title={isPinned ? 'unpin' : 'pin'}>{isPinned ? <PinnedIcon/> : <PinIcon/>}</a>
                     <a className="link pointer mh2 dim" onClick={e => { e.preventDefault(); setPaused(!isPaused)}} title={isPaused ? 'continue updating' : 'pause updating'}>{isPaused ? <ContinueIcon/> : <PauseIcon/>}</a>
                     { !isPaused && <a className={'link pointer mh2 dim'} onClick={e => { e.preventDefault(); forceUpdate(); }} title="update"><RefreshIcon/></a> }
+                    <a className="link pointer mh2 dim" onClick={e => { e.preventDefault(); setDoSuggest(!doSuggest)}} title={doSuggest ? 'stop ML suggestions' : 'activate ML suggestions'}>{doSuggest ? <DoNotSuggestIcon/> : <DoSuggestIcon/>}</a>
                 </span>
             </summary>
             <div className="ml1">
@@ -225,6 +210,9 @@ export function Info(props: InfoProps): JSX.Element {
                             </div>
                         </Details>
                 </div>
+                {(doSuggest && goalState) ? <div>
+                    <Suggestor widget={widget} goalState={goalState} />
+                </div> : null }
                 {nothingToShow && (
                     loading ? 'Loading...' :
                     isPaused ? <span>Updating is paused. <a className="link pointer dim" onClick={e => forceUpdate()}>Refresh</a> or <a className="link pointer dim" onClick={e => setPaused(false)}>resume updating</a> to see information</span> :
