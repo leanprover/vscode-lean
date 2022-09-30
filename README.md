@@ -45,7 +45,7 @@ The info view panel is essential to working interactively with Lean. It shows:
 
 (1) - (9) below refer to the labels in the screenshot above.
 
-The icons labeled (2) - (5) and (8) - (9) appear at the top of each tactic state widget.
+The icons labeled (2) - (6) and (9) - (10) appear at the top of each tactic state widget.
 
 1. The info view will activate automatically when a Lean file is opened, but you can also click <img src="media/display-goal-light.png"> at the top right of the editor window or hit the keybind for the `lean.displayGoal` (<kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>enter</kbd> by default) to reopen it.
 
@@ -65,7 +65,9 @@ The icons labeled (2) - (5) and (8) - (9) appear at the top of each tactic state
 
 5. Update: clicking <img src="media/update.png" width="16px"> will refresh the tactic state of the pinned widget.
 
-6. (Lean 3.15.0c and newer) Types in the context can be examined in the tactic state widget by clicking on the subterms:
+6. Suggest: clicking <img src="media/suggest.png" width="16px"> will activate api-based suggestions. The API url and key for these suggestions can be configured through options `lean.suggestionURL` and `lean.suggestionAPIKey`.
+
+7. (Lean 3.15.0c and newer) Types in the context can be examined in the tactic state widget by clicking on the subterms:
 
    <img src="media/inspect-term-example-1.png" width="250px">
 
@@ -73,13 +75,13 @@ The icons labeled (2) - (5) and (8) - (9) appear at the top of each tactic state
 
    <img src="media/inspect-term-example-2.png" width="250px">
 
-7. The "All Messages" widget can be expanded by clicking on it (or hitting the keybind for `lean.displayList`, <kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>shift</kbd>+<kbd>enter</kbd> by default)
+8. The "All Messages" widget can be expanded by clicking on it (or hitting the keybind for `lean.displayList`, <kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>shift</kbd>+<kbd>enter</kbd> by default)
 
    <img src="media/expand-all-messages.png">
 
-8. Widget / plain text selection: For Lean versions older than Lean 3.15.0c, the tactic state is displayed as a non-interactive string. For newer versions of Lean, the widget mode (with features described in (6)) is used by default. This dropdown menu allows selecting between the two.
+9. Widget / plain text selection: For Lean versions older than Lean 3.15.0c, the tactic state is displayed as a non-interactive string. For newer versions of Lean, the widget mode (with features described in (6)) is used by default. This dropdown menu allows selecting between the two.
 
-9. Tactic state filter: the hypotheses in the tactic state can be filtered, with options on whether the tactic state is being displayed as a widget or in plain text (see (8)).
+10. Tactic state filter: the hypotheses in the tactic state can be filtered, with options on whether the tactic state is being displayed as a widget or in plain text (see (8)).
    * In widget mode, the allowed filters are built into Lean. Currently you can choose to filter out instances or data, by selecting "no instances" or "only props", respectively.
 
      <img src="media/widget-filter-example.png">
@@ -147,6 +149,12 @@ This extension contributes the following settings (for a complete list, open the
   - `match` is a boolean, where `true` (`false`) means blocks in the tactic state matching `regex` will be included (excluded) in the info view,
   - `flags` are additional flags passed to the [JavaScript RegExp constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp).
   - The `name` key is optional and may contain a string that is displayed in the dropdown instead of the full regex details.
+
+### API settings
+
+* `lean.suggestionURL` URL to the API endpoint, accepting POST JSON requests containing a dictionary with two fields: `tactic_state` and `prefix`. The answer is expected to be a JSON dictionary containing a field `tactic_infos` with a list of dictionaries containing a key `tactic`.
+
+* `lean.suggestionAPIKey` The API key passed through to the API via the x-api-key header in the request.
 
 ## Extension commands
 

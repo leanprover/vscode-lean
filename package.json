@@ -26,12 +26,12 @@
 				},
 				"lean.suggestionURL": {
 					"type": "string",
-					"default": "",
+					"default": "https://dtvst8cdg8.execute-api.us-east-1.amazonaws.com/dev/suggest",
 					"markdownDescription": "URL to contact for model suggestions"
 				},
 				"lean.suggestionAPIKey": {
 					"type": "string",
-					"default": "",
+					"default": "wlGINGVQMB6CtXZ1MndJz2F3z0sSuCFo7dbIB7m0",
 					"markdownDescription": "API Key to use for suggestions"
 				},
 				"lean.leanpkgPath": {
