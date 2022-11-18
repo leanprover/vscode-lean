@@ -12,6 +12,8 @@
     "f<>": "‹$CURSOR›",
     "f<<>>": "«$CURSOR»",
     "[--]": "⁅$CURSOR⁆",
+    "nnnorm": "‖$CURSOR‖₊",
+    "norm": "‖$CURSOR‖",
     "\\": "\\",
     "a": "α",
     "b": "β",
