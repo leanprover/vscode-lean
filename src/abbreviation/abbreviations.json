@@ -9,6 +9,7 @@
     "()": "($CURSOR)",
     "()_": "($CURSOR)_",
     "([])'": "⟮$CURSOR⟯",
+    "<<>>": "⟪$CURSOR⟫",
     "f<>": "‹$CURSOR›",
     "f<<>>": "«$CURSOR»",
     "[--]": "⁅$CURSOR⁆",
