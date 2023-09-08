@@ -1,32 +1,32 @@
-# Lean for VS Code
+# Lean 3 for VS Code
 
-This extension adds support for [Lean](https://github.com/leanprover/lean).
+This extension adds support for an older version of Lean, [Lean 3](https://github.com/leanprover/lean). It is succeeded by [vscode-lean4](https://github.com/leanprover/vscode-lean4) for [Lean 4](https://github.com/leanprover/lean4).
 
 ## Features
 
 We currently support a variety of features. For basic VS Code editor features, see the [VS Code User Interface docs](https://code.visualstudio.com/docs/getstarted/userinterface).
 
-### Lean language server support
+### Lean 3 language server support
 
-* Automatic installation of Lean via [elan](https://github.com/leanprover/elan)
-* Incremental compilation and checking via the Lean server
+* Automatic installation of Lean 3 via [elan](https://github.com/leanprover/elan)
+* Incremental compilation and checking via the Lean 3 server
 * Hover shows documentation, types, and Unicode input help:
-  * Here's an example from the [Lean tutorials project](https://github.com/leanprover-community/tutorials):
+  * Here's an example from the [Lean 3 tutorials project](https://github.com/leanprover-community/tutorials):
 
     <img src="media/hover-example.png">
   * Holding down <kbd>ctrl</kbd> will display the declaration as well:
 
     <img src="media/hover-decl-example.png">
-* Auto-completion based on context and type via the Lean server
+* Auto-completion based on context and type via the Lean 3 server
 * Error messages / diagnostics
 * Batch file execution
 * Tasks for `leanpkg` (<kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd> and select "Tasks: Configure Task")
 * Search for declarations in open files (<kbd>ctrl</kbd>+<kbd>t</kbd> or <kbd>ctrl</kbd>+<kbd>p</kbd> `#`)
-* Region of interest checking (i.e. control how much of the project is checked automatically by Lean)
+* Region of interest checking (i.e. control how much of the project is checked automatically by Lean 3)
 <!--- TODO(Bryan): fix this or remove it
 * Type of the term under the cursor can be displayed in the status bar --->
 
-### Lean editing features
+### Lean 3 editing features
 
 * Customizable Unicode input support (e.g. type `\la`+<kbd>tab</kbd> to input `λ`)
 * Fill in `{! !}` holes (also `_` holes in Lean 3.16.0c and later) with the [code actions](https://code.visualstudio.com/docs/editor/refactoring#_code-actions-quick-fixes-and-refactorings) menu (<kbd>ctrl</kbd>+<kbd>.</kbd>)
@@ -34,11 +34,11 @@ We currently support a variety of features. For basic VS Code editor features, s
 
 ### Info view panel
 
-The info view panel is essential to working interactively with Lean. It shows:
+The info view panel is essential to working interactively with Lean 3. It shows:
 - tactic state widgets, with context information (hypotheses, goals) at each point in a proof / definition,
   - (in Lean 3.15.0c and newer) "expected type" widgets display the context for subterms.
   - (in Lean 3.15.0c and newer) the types of subterms in the context can be inspected interactively.
-- the "All Messages" widget, which shows all info, warning, and error messages from the Lean server, and
+- the "All Messages" widget, which shows all info, warning, and error messages from the Lean 3 server, and
 - (in Lean 3.15.0c and newer) other [custom widgets](https://leanprover-community.github.io/mathlib_docs/core/init/meta/widget/basic.html) can be rendered in the info view.
 
 <img src="media/infoview-overview.png">
@@ -47,7 +47,7 @@ The info view panel is essential to working interactively with Lean. It shows:
 
 The icons labeled (2) - (6) and (9) - (10) appear at the top of each tactic state widget.
 
-1. The info view will activate automatically when a Lean file is opened, but you can also click <img src="media/display-goal-light.png"> at the top right of the editor window or hit the keybind for the `lean.displayGoal` (<kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>enter</kbd> by default) to reopen it.
+1. The info view will activate automatically when a Lean 3 file is opened, but you can also click <img src="media/display-goal-light.png"> at the top right of the editor window or hit the keybind for the `lean.displayGoal` (<kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>enter</kbd> by default) to reopen it.
 
 2. Copy-to-comment: click <img src="media/copy-to-comment.png" width="16px"> to copy the contents of the widget to a comment in the editor:
 
@@ -79,10 +79,10 @@ The icons labeled (2) - (6) and (9) - (10) appear at the top of each tactic stat
 
    <img src="media/expand-all-messages.png">
 
-9. Widget / plain text selection: For Lean versions older than Lean 3.15.0c, the tactic state is displayed as a non-interactive string. For newer versions of Lean, the widget mode (with features described in (6)) is used by default. This dropdown menu allows selecting between the two.
+9. Widget / plain text selection: For Lean 3 versions older than Lean 3.15.0c, the tactic state is displayed as a non-interactive string. For newer versions of Lean 3, the widget mode (with features described in (6)) is used by default. This dropdown menu allows selecting between the two.
 
 10. Tactic state filter: the hypotheses in the tactic state can be filtered, with options on whether the tactic state is being displayed as a widget or in plain text (see (8)).
-   * In widget mode, the allowed filters are built into Lean. Currently you can choose to filter out instances or data, by selecting "no instances" or "only props", respectively.
+   * In widget mode, the allowed filters are built into Lean 3. Currently you can choose to filter out instances or data, by selecting "no instances" or "only props", respectively.
 
      <img src="media/widget-filter-example.png">
 
@@ -94,13 +94,13 @@ The icons labeled (2) - (6) and (9) - (10) appear at the top of each tactic stat
 
 The book ["Theorem Proving in Lean"](https://leanprover.github.io/theorem_proving_in_lean) can be read by hitting <kbd>ctrl</kbd>+<kbd>shift</kbd>+<kbd>p</kbd> and searching for "Lean: Open Documentation View".
 
-Any Lean project with an `html/` folder can be displayed in this panel. For example, try out the book [Mathematics in Lean](https://leanprover-community.github.io/mathematics_in_lean).
+Any Lean 3 project with an `html/` folder can be displayed in this panel. For example, try out the book [Mathematics in Lean](https://leanprover-community.github.io/mathematics_in_lean).
 
 ## Requirements
 
-This extension requires an installation of [Lean](https://leanprover.github.io). As of version 0.12.1, the extension can install Lean for you using [elan](https://github.com/Kha/elan). However, we highly recommend following the instructions at the [mathlib installation docs](https://leanprover-community.github.io/get_started.html).
+This extension requires an installation of [Lean 3](https://leanprover.github.io). As of version 0.12.1, the extension can install Lean 3 for you using [elan](https://github.com/Kha/elan).
 
-On Windows, if you installed Lean using MSYS2, you need to add both `C:\msys64\mingw64\bin` (or wherever you installed MSYS2) and `C:\projects\lean\bin` (or wherever you installed Lean) to the system `PATH` environment variable. To do this, press <kbd>Win</kbd>+<kbd>Pause</kbd> > go to Advanced System Settings > go to Environment variables. Under system variables (not user variables) find the `Path` variable, and add these two folders.
+On Windows, if you installed Lean 3 using MSYS2, you need to add both `C:\msys64\mingw64\bin` (or wherever you installed MSYS2) and `C:\projects\lean\bin` (or wherever you installed Lean 3) to the system `PATH` environment variable. To do this, press <kbd>Win</kbd>+<kbd>Pause</kbd> > go to Advanced System Settings > go to Environment variables. Under system variables (not user variables) find the `Path` variable, and add these two folders.
 
 ## Extension Settings
 
@@ -108,15 +108,15 @@ This extension contributes the following settings (for a complete list, open the
 
 ### Server settings
 
-* `lean.executablePath`: controls which Lean executable is used when starting the server. Most users (i.e. those using `elan`) should not ever need to change this. If you are bundling Lean and `vscode-lean` with [Portable mode VS Code](https://code.visualstudio.com/docs/editor/portable), you might find it useful to specify a relative path to Lean. This can be done by starting this setting string with `%extensionPath%`; the extension will replace this with the absolute path of the extension folder. For example, with the default directory setup in Portable mode, `%extensionPath%/../../../lean` will point to `lean` in the same folder as the VS Code executable / application.
+* `lean.executablePath`: controls which Lean 3 executable is used when starting the server. Most users (i.e. those using `elan`) should not ever need to change this. If you are bundling Lean 3 and `vscode-lean` with [Portable mode VS Code](https://code.visualstudio.com/docs/editor/portable), you might find it useful to specify a relative path to Lean 3. This can be done by starting this setting string with `%extensionPath%`; the extension will replace this with the absolute path of the extension folder. For example, with the default directory setup in Portable mode, `%extensionPath%/../../../lean` will point to `lean` in the same folder as the VS Code executable / application.
 
 * `lean.leanpkgPath`: controls which leanpkg executable is used for `leanpkg` task integration. The `%extensionPath%` token can be used here as well. As above, if you are using `elan`, this should never need to be changed.
 
-* `lean.extraOptions`: an array of additional command-line options to pass to `lean` (e.g. `--old` in Lean 3.10.0c or later, which allows Lean to use out-of-date `.olean`s.)
+* `lean.extraOptions`: an array of additional command-line options to pass to `lean` (e.g. `--old` in Lean 3.10.0c or later, which allows Lean 3 to use out-of-date `.olean`s.)
 
-* `lean.timeLimit`: controls the `-T` flag passed to the Lean executable
+* `lean.timeLimit`: controls the `-T` flag passed to the Lean 3 executable
 
-* `lean.memoryLimit`: controls the `-M` flag passed to the Lean executable
+* `lean.memoryLimit`: controls the `-M` flag passed to the Lean 3 executable
 
 * `lean.roiModeDefault`: controls the default region of interest, the options are:
   - `nothing`: check nothing
@@ -142,7 +142,7 @@ This extension contributes the following settings (for a complete list, open the
 
 ### Info view settings
 
-* `lean.infoViewAutoOpen`: controls whether the info view is automatically displayed when the Lean extension is activated (`true` by default).
+* `lean.infoViewAutoOpen`: controls whether the info view is automatically displayed when the Lean 3 extension is activated (`true` by default).
 
 * `lean.infoViewTacticStateFilters`: An array of objects containing regular expression strings that can be used to filter (positively or negatively) the plain text tactic state in the info view. Set to an empty array `[]` to hide the filter select dropdown. Each object must contain the following keys:
   - `regex` is a properly-escaped regex string,
@@ -166,7 +166,7 @@ The format below is: "`lean.commandName` (command name): description", where `le
 
 * `lean.restartServer` (Lean: Restart): restart the Language Server. Useful if the server crashes or if you fetched new `.olean` files using [leanproject](https://github.com/leanprover-community/mathlib-tools).
 
-* `lean.roiMode.select` (Lean: Select Region-of-interest): select the region of interest (files to be checked by the Lean server).
+* `lean.roiMode.select` (Lean: Select Region-of-interest): select the region of interest (files to be checked by the Lean 3 server).
 
   <details>
     <summary>The choices can also be made directly:</summary>
