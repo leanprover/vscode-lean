@@ -1,6 +1,6 @@
 # Lean 3 for VS Code
 
-This extension adds support for an older version of Lean, [Lean 3](https://github.com/leanprover/lean). It is succeeded by [vscode-lean4](https://github.com/leanprover/vscode-lean4) for [Lean 4](https://github.com/leanprover/lean4).
+This extension adds support for an older version of Lean, [Lean 3](https://github.com/leanprover/lean). It is succeeded by [vscode-lean4](https://github.com/leanprover/vscode-lean4) (also called `lean4` in the extensions menu) for [Lean 4](https://github.com/leanprover/lean4). If you want to use [Lean 4](https://github.com/leanprover/lean4), you cannot use this extension and must instead use [vscode-lean4](https://github.com/leanprover/vscode-lean4).
 
 ## Features
 
