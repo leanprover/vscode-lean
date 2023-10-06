@@ -435,7 +435,7 @@
 		"axios": "^0.21.1",
 		"carrier": "0.3.0",
 		"cheerio": "1.0.0-rc.9",
-		"express": "^4.17.1",
+		"express": "^4.18.2",
 		"hasbin": "^1.2.3",
 		"katex": "^0.13.11",
 		"lean-client-js-core": "^3.3.1",
