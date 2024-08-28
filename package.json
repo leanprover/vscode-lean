@@ -1,6 +1,6 @@
 {
 	"name": "lean",
-	"displayName": "lean",
+	"displayName": "Lean 3 (deprecated)",
 	"description": "Lean 3 language support for VS Code",
 	"version": "0.16.59",
 	"publisher": "jroesch",
