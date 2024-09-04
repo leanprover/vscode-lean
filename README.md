@@ -39,7 +39,7 @@ The info view panel is essential to working interactively with Lean 3. It shows:
   - (in Lean 3.15.0c and newer) "expected type" widgets display the context for subterms.
   - (in Lean 3.15.0c and newer) the types of subterms in the context can be inspected interactively.
 - the "All Messages" widget, which shows all info, warning, and error messages from the Lean 3 server, and
-- (in Lean 3.15.0c and newer) other [custom widgets](https://leanprover-community.github.io/mathlib_docs/core/init/meta/widget/basic.html) can be rendered in the info view.
+- (in Lean 3.15.0c and newer) other [custom widgets](https://leanprover-community.github.io/mathlib_docs/init/meta/widget/basic.html) can be rendered in the info view.
 
 <img src="media/infoview-overview.png">
 
