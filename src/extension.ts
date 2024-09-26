@@ -44,7 +44,7 @@ const LEAN_MODE: DocumentFilter = {
     // scheme: 'file',
 };
 
-export async function activate(context: ExtensionContext): Promise<void> {
+export async function activate(context: ExtensionContext) {
     const isLean3 = await checkLean3();
     if (!isLean3) {
         return;
@@ -113,9 +113,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
     context.subscriptions.push(new LeanStatusBarItem(server, roiManager));
 
     let staticServer = null;
+    let infoView : InfoProvider = null;
     function waitStaticServer() {
         // Add info view: listing either the current goal state or a list of all error messages
-        const infoView = new InfoProvider(server, LEAN_MODE, context, staticServer);
+        infoView = new InfoProvider(server, LEAN_MODE, context, staticServer);
         context.subscriptions.push(infoView);
         context.subscriptions.push(new DocViewProvider(staticServer));
         // Tactic suggestions
@@ -134,4 +135,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
     context.subscriptions.push(languages.registerDocumentLinkProvider(LEAN_MODE,
         new LibraryNoteLinkProvider()));
+
+    return {'infoView': infoView}; // export infoView for other plugins to use
 }
