@@ -2,7 +2,7 @@
 	"name": "lean",
 	"displayName": "Lean 3 (deprecated)",
 	"description": "Lean 3 language support for VS Code",
-	"version": "0.16.59",
+	"version": "0.16.60",
 	"publisher": "jroesch",
 	"engines": {
 		"vscode": "^1.38.0"
